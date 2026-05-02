@@ -1,6 +1,6 @@
 name("Pulsar Framework Robbery")
 author("[Alzar, Dr Nick]")
-
+version("1.0.1")
 lua54("yes")
 fx_version("cerulean")
 game("gta5")
@@ -8,12 +8,12 @@ client_script("@pulsar-core/exports/cl_error.lua")
 client_script("@pulsar-pwnzor/client/check.lua")
 
 client_scripts({
-	"client/**/*.lua",
+  "client/**/*.lua",
 })
 shared_scripts({
-	"shared/**/*.lua",
+  "shared/**/*.lua",
 })
 
 server_scripts({
-	"server/**/*.lua",
+  "server/**/*.lua",
 })
