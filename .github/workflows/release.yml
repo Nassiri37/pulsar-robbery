@@ -16,11 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Bundle files
-        run: |
-          mkdir -p ./temp/pulsar-robbery
-          cp ./{README.md,fxmanifest.lua} ./temp/pulsar-robbery
-          cp -r ./{client,server,shared} ./temp/pulsar-robbery
-          cd ./temp && zip -r ../pulsar-robbery.zip ./pulsar-robbery
+        run: zip -r pulsar-robbery.zip . -x '*/.github/*' -x '*/node_modules/*'
 
       - name: Create release
         uses: softprops/action-gh-release@v2
