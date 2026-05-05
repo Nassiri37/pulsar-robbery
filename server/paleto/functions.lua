@@ -1,8 +1,10 @@
+local _pb = RobberyConfig.paleto
+
 function PaletoIsGloballyReady(source, isHack)
 	if
 		GlobalState["RestartLockdown"] ~= false
 		and (
-			GetGameTimer() < PALETO_SERVER_START_WAIT
+			GetGameTimer() < _pb.serverStartWait
 			or (GlobalState["RestartLockdown"] and not GlobalState["PaletoInProgress"])
 		)
 	then
@@ -16,7 +18,7 @@ function PaletoIsGloballyReady(source, isHack)
 			)
 		end
 		return false
-	elseif (GlobalState["Duty:police"] or 0) < PALETO_REQUIRED_POLICE and not GlobalState["PaletoInProgress"] then
+	elseif (GlobalState["Duty:police"] or 0) < _pb.requiredPolice and not GlobalState["PaletoInProgress"] then
 		exports['pulsar-hud']:Notification(source, "error",
 			"Enhanced Security Measures Enabled, Maybe Check Back Later When Things Feel Safer",
 			6000
@@ -33,18 +35,18 @@ end
 
 function DisablePaletoPower(source)
 	if not _pbGlobalReset or os.time() > _pbGlobalReset then
-		_pbGlobalReset = os.time() + PALETO_RESET_TIME
+		_pbGlobalReset = os.time() + _pb.resetTime
 	end
 
-	for k, v in ipairs(_pbPCHackAreas) do
+	for k, v in ipairs(_pb.pcHackAreas) do
 		exports['pulsar-robbery']:StateUpdate("paleto", v.data.pcId, _pbGlobalReset, "exploits")
 	end
 
-	for k, v in ipairs(_pbSubStations) do
+	for k, v in ipairs(_pb.subStations) do
 		exports['pulsar-robbery']:StateUpdate("paleto", k, _pbGlobalReset, "substations")
 	end
 
-	for k, v in ipairs(_pbPowerHacks) do
+	for k, v in ipairs(_pb.powerHacks) do
 		exports['pulsar-robbery']:StateUpdate("paleto", v.data.boxId, _pbGlobalReset, "electricalBoxes")
 	end
 
@@ -85,7 +87,7 @@ function ResetPaleto()
 		TriggerClientEvent("Sounds:Client:Stop:Distance", -1, _bankStates.paleto.fookinLasers, "bank_alarm.ogg")
 	end
 
-	for k, v in ipairs(_pbDoorIds) do
+	for k, v in ipairs(_pb.doorIds) do
 		exports['ox_doorlock']:SetLock(v, true)
 	end
 
@@ -100,7 +102,7 @@ function ResetPaleto()
 		officeHacks = {},
 		drillPoints = {},
 	})
-	_pbGlobalReset = os.time() + PALETO_RESET_TIME
+	_pbGlobalReset = os.time() + _pb.resetTime
 
 	exports['ox_doorlock']:SetLock("pulsar_bank_savings_paleto_gate", true)
 	exports['pulsar-cctv']:StateGroupOnline("paleto")
@@ -118,7 +120,7 @@ function SecurePaleto()
 		TriggerClientEvent("Sounds:Client:Stop:Distance", -1, _bankStates.paleto.fookinLasers, "bank_alarm.ogg")
 	end
 
-	for k, v in ipairs(_pbDoorIds) do
+	for k, v in ipairs(_pb.doorIds) do
 		exports['ox_doorlock']:SetLock(v, true)
 	end
 
@@ -133,7 +135,7 @@ function SecurePaleto()
 		officeHacks = {},
 		drillPoints = {},
 	})
-	_pbGlobalReset = os.time() + PALETO_RESET_TIME
+	_pbGlobalReset = os.time() + _pb.resetTime
 
 	exports['ox_doorlock']:SetLock("pulsar_bank_savings_paleto_gate", true)
 	exports['pulsar-cctv']:StateGroupOnline("paleto")
@@ -146,7 +148,7 @@ function SecurePaleto()
 end
 
 function IsSecurityAccessible()
-	for k, v in ipairs(_pbSecurityPower) do
+	for k, v in ipairs(_pb.securityPower) do
 		if
 			not _bankStates.paleto.securityPower[v.powerId]
 			or os.time() > _bankStates.paleto.securityPower[v.powerId]

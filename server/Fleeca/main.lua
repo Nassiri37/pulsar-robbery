@@ -1,3 +1,10 @@
+local _fc          = RobberyConfig.fleeca
+local _vaultLoot   = _fc.loot
+local _fcItems     = _fc.items
+local _fcGames     = _fc.games
+local _fcLocs      = _fc.locations
+local _fcTrolleys  = _fc.trolleyTypes
+
 local _robberyAlerts = {}
 _fcGlobalReset = {}
 local _inUse = {
@@ -9,36 +16,12 @@ local _inUse = {
 }
 
 local _inProgress = {}
-
 local _redDongies = {}
-local _vaultLoot = {
-	trolley = {
-		cash = {
-			{ 60, { name = "moneyroll", min = 200, max = 250 } },
-			{ 33, { name = "moneyband", min = 22, max = 28 } },
-			{ 5,  { name = "valuegoods", min = 14, max = 20 } },
-			{ 2,  { name = "moneybag", min = 1, max = 1, metadata = { CustomAmt = { Min = 15000, Random = 5000 } } } },
-		},
-		gold = {
-			{ 85, { name = "goldbar", min = 50, max = 70 } },
-			{ 15, { name = "moneybag", min = 1, max = 1, metadata = { CustomAmt = { Min = 40000, Random = 10000 } } } },
-		},
-		gems = {
-			{ 20, { name = "opal", min = 1, max = 1 } },
-			{ 20, { name = "citrine", min = 1, max = 1 } },
-			{ 20, { name = "amethyst", min = 1, max = 1 } },
-			{ 15, { name = "ruby", min = 1, max = 1 } },
-			{ 15, { name = "sapphire", min = 1, max = 1 } },
-			{ 5,  { name = "emerald", min = 1, max = 1 } },
-			{ 5,  { name = "diamond", min = 1, max = 1 } },
-		},
-	},
-}
 
 local _triggered = {}
 
 function ResetSource(source)
-	for k, v in pairs(FLEECA_LOCATIONS) do
+	for k, v in pairs(_fcLocs) do
 		if _inUse.VaultDoor[v.id] == source then
 			_inUse.VaultDoor[v.id] = nil
 		end
@@ -57,8 +40,8 @@ function ResetFleeca(fleecaId)
 
 	GlobalState[string.format("Fleeca:%s:VaultDoor", fleecaId)] = nil
 
-	if FLEECA_LOCATIONS[fleecaId].loots ~= nil then
-		for k, v in ipairs(FLEECA_LOCATIONS[fleecaId].loots) do
+	if _fcLocs[fleecaId].loots ~= nil then
+		for k, v in ipairs(_fcLocs[fleecaId].loots) do
 			GlobalState[string.format("Fleeca:%s:Loot:%s", fleecaId, v.options.name)] = nil
 		end
 	end
@@ -83,7 +66,7 @@ function StartAutoCDTimer(fleecaId)
 			_inProgress[fleecaId] = false
 			GlobalState[string.format("Fleeca:Disable:%s", fleecaId)] = false
 			if not _fcGlobalReset[fleecaId] or os.time() > _fcGlobalReset[fleecaId] then
-				_fcGlobalReset[fleecaId] = os.time() + (60 * 60 * math.random(4, 6))
+				_fcGlobalReset[fleecaId] = os.time() + (60 * 60 * math.random(_fc.cooldown.min, _fc.cooldown.max))
 			end
 
 			GlobalState[string.format("Fleeca:%s:VaultDoor", fleecaId)] = {
@@ -91,8 +74,8 @@ function StartAutoCDTimer(fleecaId)
 				expires = _fcGlobalReset[fleecaId],
 			}
 
-			if FLEECA_LOCATIONS[fleecaId].loots ~= nil then
-				for k, v in ipairs(FLEECA_LOCATIONS[fleecaId].loots) do
+			if _fcLocs[fleecaId].loots ~= nil then
+				for k, v in ipairs(_fcLocs[fleecaId].loots) do
 					GlobalState[string.format("Fleeca:%s:Loot:%s", fleecaId, v.options.name)] = nil
 				end
 			end
@@ -107,7 +90,7 @@ end
 
 function GetFleecaIds()
 	local fleecaIds = {}
-	for k, v in pairs(FLEECA_LOCATIONS) do
+	for k, v in pairs(_fcLocs) do
 		table.insert(fleecaIds, k)
 	end
 	return fleecaIds
@@ -115,13 +98,13 @@ end
 
 AddEventHandler("Robbery:Server:Setup", function()
 	local t = {}
-	for k, v in pairs(FLEECA_LOCATIONS) do
+	for k, v in pairs(_fcLocs) do
 		_inProgress[v.id] = false
 		table.insert(t, v.id)
 		for k, v in ipairs(v.loots) do
-			v.type = TROLLY_TYPES[math.random(#TROLLY_TYPES)]
+			v.trolley = _fcTrolleys[math.random(#_fcTrolleys)]
 		end
-		GlobalState[string.format("FleecaRobberies:%s", v.id)] = FLEECA_LOCATIONS[v.id]
+		GlobalState[string.format("FleecaRobberies:%s", v.id)] = _fcLocs[v.id]
 	end
 	GlobalState["FleecaRobberies"] = t
 	StartFleecaThreads()
@@ -145,13 +128,13 @@ AddEventHandler("Robbery:Server:Setup", function()
 					or not exports['ox_doorlock']:IsLocked(string.format("%s_gate", pState.fleeca))
 				)
 			then
-				if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < SERVER_START_WAIT or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
+				if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < _fc.serverStartWait or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
 					exports['pulsar-hud']:Notification(source, "error",
 						"You Notice The Door Is Barricaded For A Storm, Maybe Check Back Later",
 						6000
 					)
 					return
-				elseif (GlobalState["Duty:police"] or 0) < REQUIRED_POLICE and not _inProgress[pState.fleeca] then
+				elseif (GlobalState["Duty:police"] or 0) < _fc.requiredPolice and not _inProgress[pState.fleeca] then
 					exports['pulsar-hud']:Notification(source, "error",
 						"Enhanced Security Measures Enabled, Maybe Check Back Later When Things Feel Safer",
 						6000
@@ -171,9 +154,9 @@ AddEventHandler("Robbery:Server:Setup", function()
 					_inUse.Loot[data.id] = source
 					GlobalState["MazeBankInProgress"] = true
 
-					if exports.ox_inventory:ItemsHas(char:GetData("SID"), "drill", 1) then
-						local slot = exports.ox_inventory:ItemsGetFirst(char:GetData("SID"), "drill", 1)
-						local itemData = exports.ox_inventory:ItemsGetData("drill")
+					if exports.ox_inventory:ItemsHas(char:GetData("SID"), _fcItems.drill, 1) then
+						local slot = exports.ox_inventory:ItemsGetFirst(char:GetData("SID"), _fcItems.drill, 1)
+						local itemData = exports.ox_inventory:ItemsGetData(_fcItems.drill)
 
 						if slot ~= nil then
 							exports['pulsar-core']:LoggerInfo(
@@ -188,10 +171,10 @@ AddEventHandler("Robbery:Server:Setup", function()
 								)
 							)
 							exports["pulsar-core"]:ClientCallback(source, "Robbery:Games:Drill", {
-								passes = 1,
-								duration = 25000,
-								config = {},
-								data = {},
+								passes   = _fcGames.drill.passes,
+								duration = _fcGames.drill.duration,
+								config   = _fcGames.drill.config,
+								data     = {},
 							}, function(success)
 								if type(itemData.durability) == 'number' then
 									local newValue = slot.CreateDate - itemData.durability
@@ -208,7 +191,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 								if _robberyAlerts[pState.fleeca] == nil or _robberyAlerts[pState.fleeca] < os.time() then
 									exports['pulsar-robbery']:TriggerPDAlert(
 										source,
-										FLEECA_LOCATIONS[pState.fleeca].coords,
+										_fcLocs[pState.fleeca].coords,
 										"10-90",
 										"Armed Robbery",
 										{
@@ -220,7 +203,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										{
 											icon = "building-columns",
 											details = string.format("Fleeca Bank - %s",
-												FLEECA_LOCATIONS[pState.fleeca].label),
+												_fcLocs[pState.fleeca].label),
 										},
 										pState.fleeca
 									)
@@ -228,7 +211,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 								end
 
 								if success then
-									local lootData = FLEECA_LOCATIONS[pState.fleeca].loots[data.index]
+									local lootData = _fcLocs[pState.fleeca].loots[data.index]
 									exports['pulsar-core']:LoggerInfo(
 										"Robbery",
 										string.format(
@@ -248,7 +231,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									end
 
 									exports.ox_inventory:LootCustomWeightedSetWithCount(
-										_vaultLoot.trolley[lootData?.type?.type or "cash"],
+										_vaultLoot.trolley[lootData?.trolley?.type or "cash"],
 										char:GetData("SID"), 1)
 									if math.random(100) <= 3 then
 										exports.ox_inventory:AddItem(char:GetData("SID"), "crypto_voucher", 1, {
@@ -266,7 +249,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									end
 
 									if not _fcGlobalReset[pState.fleeca] or os.time() > _fcGlobalReset[pState.fleeca] then
-										_fcGlobalReset[pState.fleeca] = os.time() + (60 * 60 * math.random(4, 6))
+										_fcGlobalReset[pState.fleeca] = os.time() + (60 * 60 * math.random(_fc.cooldown.min, _fc.cooldown.max))
 									end
 
 									GlobalState[string.format("Fleeca:%s:Loot:%s", pState.fleeca, data.id)] =
@@ -308,7 +291,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				_inProgress[pState.fleeca] = false
 				GlobalState[string.format("Fleeca:Disable:%s", pState.fleeca)] = false
 				if not _fcGlobalReset[pState.fleeca] or os.time() > _fcGlobalReset[pState.fleeca] then
-					_fcGlobalReset[pState.fleeca] = os.time() + (60 * 60 * math.random(4, 6))
+					_fcGlobalReset[pState.fleeca] = os.time() + (60 * 60 * math.random(_fc.cooldown.min, _fc.cooldown.max))
 				end
 
 				GlobalState[string.format("Fleeca:%s:VaultDoor", pState.fleeca)] = {
@@ -316,8 +299,8 @@ AddEventHandler("Robbery:Server:Setup", function()
 					expires = _fcGlobalReset[pState.fleeca],
 				}
 
-				if FLEECA_LOCATIONS[pState.fleeca].loots ~= nil then
-					for k, v in ipairs(FLEECA_LOCATIONS[pState.fleeca].loots) do
+				if _fcLocs[pState.fleeca].loots ~= nil then
+					for k, v in ipairs(_fcLocs[pState.fleeca].loots) do
 						GlobalState[string.format("Fleeca:%s:Loot:%s", pState.fleeca, v.options.name)] = nil
 					end
 				end
@@ -333,7 +316,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 		end
 	end)
 
-	exports.ox_inventory:RegisterUse("green_laptop", "FleecaRobbery", function(source, slot, itemData)
+	exports.ox_inventory:RegisterUse(_fcItems.laptop, "FleecaRobbery", function(source, slot, itemData)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
 		local pState = Player(source).state
 
@@ -343,14 +326,14 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 			if not GlobalState["AntiShitlord"] or os.time() >= GlobalState["AntiShitlord"] or _inProgress[pState.fleeca] then
 				local bankData = GlobalState[string.format("FleecaRobberies:%s", pState.fleeca)]
-				if #(bankData.points.vaultPC.coords - playerCoords) <= 1.5 then
-					if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < SERVER_START_WAIT or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
+				if #(bankData.points.laptopLoc.coords - playerCoords) <= 1.5 then
+					if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < _fc.serverStartWait or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
 						exports['pulsar-hud']:Notification(source, "error",
 							"You Notice The Door Is Barricaded For A Storm, Maybe Check Back Later",
 							6000
 						)
 						return
-					elseif (GlobalState["Duty:police"] or 0) < REQUIRED_POLICE and not _inProgress[pState.fleeca] then
+					elseif (GlobalState["Duty:police"] or 0) < _fc.requiredPolice and not _inProgress[pState.fleeca] then
 						exports['pulsar-hud']:Notification(source, "error",
 							"Enhanced Security Measures Enabled, Maybe Check Back Later When Things Feel Safer",
 							6000
@@ -399,7 +382,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									},
 									{
 										icon = "building-columns",
-										details = string.format("Fleeca Bank - %s", FLEECA_LOCATIONS[pState.fleeca]
+										details = string.format("Fleeca Bank - %s", _fcLocs[pState.fleeca]
 											.label),
 									},
 									pState.fleeca
@@ -411,17 +394,9 @@ AddEventHandler("Robbery:Server:Setup", function()
 								source,
 								"Robbery:Games:Laptop",
 								{
-									location = bankData.points.vaultPC,
-									config = {
-										countdown = 3,
-										timer = { 1800, 2200 },
-										limit = 30000,
-										difficulty = 3,
-										chances = 4,
-										isShuffled = false,
-										anim = false,
-									},
-									data = {},
+									location = bankData.points.laptopLoc,
+									config   = _fcGames.laptop,
+									data     = {},
 								},
 								function(success, data)
 									if success then
@@ -448,7 +423,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 												char:GetData("First"), char:GetData("Last"), char:GetData("SID"),
 												pState.fleeca))
 										if type(itemData.durability) == 'number' then
-											local newValue = slot.CreateDate - math.ceil(itemData.durability / 2)
+											local newValue = slot.CreateDate - math.ceil(itemData.durability / _fc.laptopAttempts)
 											if (os.time() - itemData.durability >= newValue) then
 												exports.ox_inventory:RemoveId(slot.Owner, slot.invType, slot)
 											else
@@ -492,7 +467,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 		end
 	end)
 
-	exports.ox_inventory:RegisterUse("thermite", "FleecaRobbery", function(source, slot, itemData)
+	exports.ox_inventory:RegisterUse(_fcItems.thermite, "FleecaRobbery", function(source, slot, itemData)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
 		local pState = Player(source).state
 
@@ -502,14 +477,14 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 			if not GlobalState["AntiShitlord"] or os.time() >= GlobalState["AntiShitlord"] or _inProgress[pState.fleeca] then
 				local bankData = GlobalState[string.format("FleecaRobberies:%s", pState.fleeca)]
-				if #(bankData.points.vaultGate.coords - playerCoords) <= 1.5 then
-					if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < SERVER_START_WAIT or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
+				if #(bankData.points.thermiteLoc.coords - playerCoords) <= 1.5 then
+					if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < _fc.serverStartWait or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
 						exports['pulsar-hud']:Notification(source, "error",
 							"You Notice The Door Is Barricaded For A Storm, Maybe Check Back Later",
 							6000
 						)
 						return
-					elseif (GlobalState["Duty:police"] or 0) < REQUIRED_POLICE and not _inProgress[pState.fleeca] then
+					elseif (GlobalState["Duty:police"] or 0) < _fc.requiredPolice and not _inProgress[pState.fleeca] then
 						exports['pulsar-hud']:Notification(source, "error",
 							"Enhanced Security Measures Enabled, Maybe Check Back Later When Things Feel Safer",
 							6000
@@ -555,7 +530,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									},
 									{
 										icon = "building-columns",
-										details = string.format("Fleeca Bank - %s", FLEECA_LOCATIONS[pState.fleeca]
+										details = string.format("Fleeca Bank - %s", _fcLocs[pState.fleeca]
 											.label),
 									},
 									pState.fleeca
@@ -568,20 +543,11 @@ AddEventHandler("Robbery:Server:Setup", function()
 								source,
 								"Robbery:Games:Thermite",
 								{
-									passes = 1,
-									location = bankData.points.vaultGate,
+									passes   = 1,
+									location = bankData.points.thermiteLoc,
 									duration = 15000,
-									config = {
-										countdown = 3,
-										preview = 1750,
-										timer = 9000,
-										passReduce = 500,
-										base = 10,
-										cols = 5,
-										rows = 5,
-										anim = false,
-									},
-									data = {},
+									config   = _fcGames.thermite,
+									data     = {},
 								},
 								function(success, data)
 									if success then
@@ -633,16 +599,16 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 				if not GlobalState["AntiShitlord"] or os.time() >= GlobalState["AntiShitlord"] or _inProgress[pState.fleeca] then
 					if
-						#(GlobalState[string.format("FleecaRobberies:%s", pState.fleeca)].points.vaultPC.coords - playerCoords)
+						#(GlobalState[string.format("FleecaRobberies:%s", pState.fleeca)].points.laptopLoc.coords - playerCoords)
 						<= 1.5
 					then
-						if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < SERVER_START_WAIT or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
+						if GlobalState["RestartLockdown"] ~= false and (GetGameTimer() < _fc.serverStartWait or (GlobalState["RestartLockdown"] and not _inProgress[pState.fleeca])) then
 							exports['pulsar-hud']:Notification(source, "error",
 								"You Notice The Door Is Barricaded For A Storm, Maybe Check Back Later",
 								6000
 							)
 							return
-						elseif (GlobalState["Duty:police"] or 0) < REQUIRED_POLICE and not _inProgress[pState.fleeca] then
+						elseif (GlobalState["Duty:police"] or 0) < _fc.requiredPolice and not _inProgress[pState.fleeca] then
 							exports['pulsar-hud']:Notification(source, "error",
 								"Enhanced Security Measures Enabled, Maybe Check Back Later When Things Feel Safer",
 								6000

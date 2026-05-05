@@ -10,7 +10,7 @@ function FleecaThreads()
 						and GlobalState[string.format("Fleeca:%s:VaultDoor", bankData.id)] ~= nil
 						and GlobalState[string.format("Fleeca:%s:VaultDoor", bankData.id)].state == 3
 					then
-						OpenDoor(bankData.points.vaultPC.coords, bankData.doors.vaultDoor)
+						OpenDoor(bankData.points.laptopLoc.coords, bankData.doors.vaultDoor)
 					end
 				end
 				Wait(1000)

@@ -1,3 +1,5 @@
+local _pb = RobberyConfig.paleto
+
 _pbInUse = {
 	workstation = false,
 	officeSafe = false,
@@ -33,7 +35,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 	RegisterPBItems()
 	StartPaletoThreads()
 
-	for k, v in ipairs(_pbDoorIds) do
+	for k, v in ipairs(_pb.doorIds) do
 		exports['ox_doorlock']:SetLock(v, true)
 	end
 
@@ -97,7 +99,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 			event = "Robbery:Client:Paleto:VaultTerminal",
 		})
 
-		for k, v in ipairs(_pbDoorsGarbage) do
+		for k, v in ipairs(_pb.doorsGarbage) do
 			table.insert(its, {
 				label = v.label,
 				data = v.data,
@@ -129,7 +131,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 					if not _bankStates.paleto.vaultTerminal or os.time() > _bankStates.paleto.vaultTerminal then
 						if not _pbGlobalReset or os.time() > _pbGlobalReset then
-							_pbGlobalReset = os.time() + PALETO_RESET_TIME
+							_pbGlobalReset = os.time() + _pb.resetTime
 						end
 						exports['pulsar-robbery']:StateUpdate("paleto", "vaultTerminal", _pbGlobalReset)
 					end
@@ -165,7 +167,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 					if data.data.id ~= nil then
 						if
-							not _pbDoorsGarbage[data.data.id].requireCode
+							not _pb.doorsGarbage[data.data.id].requireCode
 							or (
 								data.data.officeId
 								and (
@@ -177,7 +179,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 							exports['ox_doorlock']:SetLock(data.data.door, false)
 							exports['pulsar-hud']:Notification(source, "success", "Door Unlocked")
 
-							if _pbDoorsGarbage[data.data.id].requireCode then
+							if _pb.doorsGarbage[data.data.id].requireCode then
 								exports.ox_inventory:RemoveAll(char:GetData("SID"), 1, "paleto_access_codes")
 							end
 						else
@@ -271,7 +273,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										end
 
 										if not _pbGlobalReset or os.time() > _pbGlobalReset then
-											_pbGlobalReset = os.time() + PALETO_RESET_TIME
+											_pbGlobalReset = os.time() + _pb.resetTime
 										end
 
 										exports['pulsar-robbery']:StateUpdate("paleto", data.boxId, _pbGlobalReset,
@@ -409,7 +411,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 											)
 										)
 										if not _pbGlobalReset or os.time() > _pbGlobalReset then
-											_pbGlobalReset = os.time() + PALETO_RESET_TIME
+											_pbGlobalReset = os.time() + _pb.resetTime
 										end
 
 										exports['pulsar-robbery']:StateUpdate("paleto", data.pcId, _pbGlobalReset,
@@ -438,7 +440,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 												string.format(
 													"Paleto Power Grid Exploits: %s/%s",
 													count,
-													#_pbPCHackAreas
+													#_pb.pcHackAreas
 												),
 												string.format(
 													[[
@@ -447,7 +449,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 															There's workstations setup around the region that are good for installing 1 exploit.
 														]],
 													char:GetData("First"),
-													#_pbPCHackAreas
+													#_pb.pcHackAreas
 												)
 											)
 										end
@@ -550,7 +552,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 											)
 										)
 										if not _pbGlobalReset or os.time() > _pbGlobalReset then
-											_pbGlobalReset = os.time() + PALETO_RESET_TIME
+											_pbGlobalReset = os.time() + _pb.resetTime
 										end
 
 										exports['pulsar-robbery']:StateUpdate("paleto", "workstation", _pbGlobalReset)
@@ -675,7 +677,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 											)
 										)
 										if not _pbGlobalReset or os.time() > _pbGlobalReset then
-											_pbGlobalReset = os.time() + PALETO_RESET_TIME
+											_pbGlobalReset = os.time() + _pb.resetTime
 										end
 
 										exports['pulsar-robbery']:StateUpdate("paleto", data.officeId, _pbGlobalReset,
@@ -812,7 +814,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										end
 
 										if not _pbGlobalReset or os.time() > _pbGlobalReset then
-											_pbGlobalReset = os.time() + PALETO_RESET_TIME
+											_pbGlobalReset = os.time() + _pb.resetTime
 										end
 
 										exports.ox_inventory:LootCustomWeightedSetWithCount(_pbLoot,
@@ -908,7 +910,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 								end
 
 								if not _pbGlobalReset or os.time() > _pbGlobalReset then
-									_pbGlobalReset = os.time() + PALETO_RESET_TIME
+									_pbGlobalReset = os.time() + _pb.resetTime
 								end
 
 								exports.ox_inventory:LootCustomWeightedSetWithCount(_pbSearchLoot,
@@ -1013,7 +1015,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 							exports.ox_inventory:RemoveAll(char:GetData("SID"), 1, "paleto_access_codes")
 							if not _pbGlobalReset or os.time() > _pbGlobalReset then
-								_pbGlobalReset = os.time() + PALETO_RESET_TIME
+								_pbGlobalReset = os.time() + _pb.resetTime
 							end
 
 							exports['pulsar-robbery']:StateUpdate("paleto", "officeSafe", _pbGlobalReset)

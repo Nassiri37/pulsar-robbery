@@ -1,3 +1,5 @@
+local _pb = RobberyConfig.paleto
+
 function RegisterPBItems()
 	exports.ox_inventory:RegisterUse("thermite", "PaletoRobbery", function(source, slot, itemData)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
@@ -5,7 +7,7 @@ function RegisterPBItems()
 
 		if pState.inSubStation then
 			local subStationId = pState.inSubStation
-			local substation = _pbSubStations[subStationId]
+			local substation = _pb.subStations[subStationId]
 			if substation ~= nil then
 				if
 					(
@@ -79,7 +81,7 @@ function RegisterPBItems()
 											end
 
 											if not _pbGlobalReset or os.time() > _pbGlobalReset then
-												_pbGlobalReset = os.time() + PALETO_RESET_TIME
+												_pbGlobalReset = os.time() + _pb.resetTime
 											end
 											exports['pulsar-robbery']:StateUpdate("paleto", subStationId, _pbGlobalReset,
 												"substations")
@@ -186,7 +188,7 @@ function RegisterPBItems()
 					local ped = GetPlayerPed(source)
 					local myCoords = GetEntityCoords(ped)
 
-					for k, v in ipairs(_pbDoorThermite) do
+					for k, v in ipairs(_pb.doorThermite) do
 						if exports['ox_doorlock']:IsLocked(v.door) then
 							if #(v.coords - myCoords) <= 1.5 then
 								if AreRequirementsUnlocked(v.requiredDoors) then
@@ -297,7 +299,7 @@ function RegisterPBItems()
 					end
 
 					if exports['ox_doorlock']:IsLocked("pulsar_bank_savings_paleto_security") then
-						for k, v in ipairs(_pbSecurityPower) do
+						for k, v in ipairs(_pb.securityPower) do
 							if #(v.coords - myCoords) <= 1.5 then
 								if AreRequirementsUnlocked(v.requiredDoors) then
 									if not _pbInUse.securityAccess[v.powerId] then
@@ -364,7 +366,7 @@ function RegisterPBItems()
 													end
 
 													if not _pbGlobalReset or os.time() > _pbGlobalReset then
-														_pbGlobalReset = os.time() + PALETO_RESET_TIME
+														_pbGlobalReset = os.time() + _pb.resetTime
 													end
 													exports['pulsar-robbery']:StateUpdate(
 														"paleto",
@@ -457,7 +459,7 @@ function RegisterPBItems()
 						return
 					end
 
-					for k, v in pairs(_pbHackPoints) do
+					for k, v in pairs(_pb.hackPoints) do
 						if #(v.coords - myCoords) <= 1.5 then
 							if AreRequirementsUnlocked(v.requiredDoors) then
 								if not _pbInUse[k] then

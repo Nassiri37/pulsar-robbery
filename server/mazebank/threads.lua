@@ -1,3 +1,4 @@
+local _mb        = RobberyConfig.mazebank
 local _threading = false
 
 function StartMazeBankThreads()
@@ -22,7 +23,7 @@ function StartMazeBankThreads()
 		local powerDisabled = IsMBPowerDisabled()
 		if not powerDisabled and not exports['ox_doorlock']:IsLocked("pulsar_mazebank_offices") then
 			exports['ox_doorlock']:SetLock("pulsar_mazebank_offices", true)
-			for k, v in ipairs(_mbOfficeDoors) do
+			for k, v in ipairs(_mb.officeDoors) do
 				exports['ox_doorlock']:SetLock(v.door, true)
 			end
 		elseif powerDisabled and exports['ox_doorlock']:IsLocked("pulsar_mazebank_offices") then
@@ -34,7 +35,7 @@ function StartMazeBankThreads()
 
 	CreateThread(function()
 		while _threading do
-			for k, v in pairs(_mbHacks) do
+			for k, v in pairs(_mb.hacks) do
 				if
 					GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] ~= nil
 					and GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)].state == 2

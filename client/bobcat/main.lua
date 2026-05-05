@@ -1,10 +1,12 @@
+local _bc = RobberyConfig.bobcat
+
 local _, relHash = AddRelationshipGroup("BOBCAT_SECURITY")
 SetRelationshipBetweenGroups(5, `BOBCAT_SECURITY`, `PLAYER`)
 SetRelationshipBetweenGroups(5, `PLAYER`, `BOBCAT_SECURITY`)
 
 AddEventHandler("Robbery:Client:Setup", function()
 	CreateThread(function()
-		local interiorid = GetInteriorAtCoords(883.4142, -2282.372, 31.44168)
+		local interiorid = GetInteriorAtCoords(_bc.interiorCoords.x, _bc.interiorCoords.y, _bc.interiorCoords.z)
 		if not GlobalState["Bobcat:VaultDoor"] then
 			RequestIpl("prologue06_int")
 			ActivateInteriorEntitySet(interiorid, "np_prolog_clean")
@@ -17,37 +19,16 @@ AddEventHandler("Robbery:Client:Setup", function()
 		RefreshInterior(interiorid)
 	end)
 
-	exports['pulsar-polyzone']:CreatePoly("bobcat", {
-		vector2(907.62103271484, -2256.4008789062),
-		vector2(884.54675292969, -2254.3540039062),
-		vector2(884.14483642578, -2258.1083984375),
-		vector2(875.30352783203, -2257.1977539062),
-		vector2(875.5947265625, -2253.6535644531),
-		vector2(862.10314941406, -2252.4174804688),
-		vector2(858.14068603516, -2301.7275390625),
-		vector2(864.97967529297, -2302.4465332031),
-		vector2(862.97448730469, -2326.4291992188),
-		vector2(893.88073730469, -2329.2299804688),
-		vector2(898.49328613281, -2282.5910644531),
-		vector2(905.71173095703, -2282.4621582031),
-		vector2(905.96569824219, -2275.7841796875),
-		vector2(902.26873779297, -2275.3005371094),
-		vector2(902.99908447266, -2266.6032714844),
-		vector2(906.78369140625, -2266.6918945312),
-	}, {
-		-- debugPoly = true,
-		minZ = 25.34613609314,
-		maxZ = 35.549388885498,
-	})
+	exports['pulsar-polyzone']:CreatePoly("bobcat", _bc.polyZone, _bc.polyZoneOptions)
 
 	exports.ox_target:addBoxZone({
 		id = "bobcat-secure",
-		coords = vector3(876.94, -2262.69, 30.47),
-		size = vector3(0.8, 1.4, 2.0),
-		rotation = 356,
+		coords = _bc.targets.secure.coords,
+		size = vector3(_bc.targets.secure.length, _bc.targets.secure.width, 2.0),
+		rotation = _bc.targets.secure.options.heading,
 		debug = false,
-		minZ = 29.87,
-		maxZ = 31.47,
+		minZ = _bc.targets.secure.options.minZ,
+		maxZ = _bc.targets.secure.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-lock",
@@ -70,12 +51,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "bobcat-c4",
-		coords = vector3(873.44, -2294.37, 30.47),
-		size = vector3(1.4, 1.4, 2.0),
-		rotation = 355,
+		coords = _bc.targets.c4.coords,
+		size = vector3(_bc.targets.c4.length, _bc.targets.c4.width, 2.0),
+		rotation = _bc.targets.c4.options.heading,
 		debug = false,
-		minZ = 29.47,
-		maxZ = 31.67,
+		minZ = _bc.targets.c4.options.minZ,
+		maxZ = _bc.targets.c4.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-bomb",
@@ -94,12 +75,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "bobcat-front-pc-hack",
-		coords = vector3(875.15, -2263.83, 30.47),
-		size = vector3(0.8, 1.2, 2.0),
-		rotation = 354,
+		coords = _bc.targets.frontPCHack.coords,
+		size = vector3(_bc.targets.frontPCHack.length, _bc.targets.frontPCHack.width, 2.0),
+		rotation = _bc.targets.frontPCHack.options.heading,
 		debug = false,
-		minZ = 28.92,
-		maxZ = 31.32,
+		minZ = _bc.targets.frontPCHack.options.minZ,
+		maxZ = _bc.targets.frontPCHack.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-terminal",
@@ -118,12 +99,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "bobcat-securiy-hack",
-		coords = vector3(887.07, -2299.13, 30.47),
-		size = vector3(3.0, 1.0, 2.0),
-		rotation = 264,
+		coords = _bc.targets.securityHack.coords,
+		size = vector3(_bc.targets.securityHack.length, _bc.targets.securityHack.width, 2.0),
+		rotation = _bc.targets.securityHack.options.heading,
 		debug = false,
-		minZ = 29.47,
-		maxZ = 31.27,
+		minZ = _bc.targets.securityHack.options.minZ,
+		maxZ = _bc.targets.securityHack.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-terminal",
@@ -235,7 +216,7 @@ end)
 -- end)
 
 RegisterNetEvent("Robbery:Client:Bobcat:UpdateIPL", function(state)
-	local interiorid = GetInteriorAtCoords(883.4142, -2282.372, 31.44168)
+	local interiorid = GetInteriorAtCoords(_bc.interiorCoords.x, _bc.interiorCoords.y, _bc.interiorCoords.z)
 	if not state then
 		RequestIpl("prologue06_int")
 		ActivateInteriorEntitySet(interiorid, "np_prolog_clean")

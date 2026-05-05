@@ -1,17 +1,19 @@
+local _lb = RobberyConfig.lombank
+
 function LBNeedsReset()
-	for k, v in pairs(lbThermPoints) do
+	for k, v in pairs(_lb.thermitePoints) do
 		if not exports['ox_doorlock']:IsLocked(v.door) then
 			return true
 		end
 	end
 
-	for k, v in pairs(_lbHackPoints) do
+	for k, v in pairs(_lb.hackPoints) do
 		if not exports['ox_doorlock']:IsLocked(v.door) then
 			return true
 		end
 	end
 
-	for k, v in ipairs(_lbUpperVaultPoints) do
+	for k, v in ipairs(_lb.upperVaultPoints) do
 		if
 			GlobalState[string.format("Lombank:Upper:Wall:%s", v.wallId)] ~= nil
 			and GlobalState[string.format("Lombank:Upper:Wall:%s", v.wallId)] > GetCloudTimeAsInt()
@@ -24,7 +26,7 @@ function LBNeedsReset()
 end
 
 function IsLBPowerDisabled()
-	for k, v in ipairs(_lbPowerBoxes) do
+	for k, v in ipairs(_lb.powerBoxes) do
 		if
 			not GlobalState[string.format("Lombank:Power:%s", v.data.boxId)]
 			or GetCloudTimeAsInt() > GlobalState[string.format("Lombank:Power:%s", v.data.boxId)]
@@ -36,61 +38,20 @@ function IsLBPowerDisabled()
 end
 
 AddEventHandler("Robbery:Client:Setup", function()
-	exports['pulsar-polyzone']:CreatePoly("dumbcunt", {
-		vector2(-316.5087890625, -2439.6040039062),
-		vector2(-319.24176025391, -2436.7438964844),
-		vector2(-326.0520324707, -2431.16796875),
-		vector2(-327.56423950195, -2433.0493164062),
-		vector2(-321.0280456543, -2438.8662109375),
-		vector2(-321.59643554688, -2438.9645996094),
-		vector2(-328.29962158203, -2433.2578125),
-		vector2(-331.92529296875, -2437.6667480469),
-		vector2(-321.82626342773, -2446.1845703125)
-	}, {
-		minZ = 5.4941825866699,
-		maxZ = 11.6915531158447
-	}, {
-		isDeath = true,
-		tpCoords = vector3(-291.188, -2406.996, 6.901),
-		door = "pulsar_coke_garage",
-	})
+	exports['pulsar-polyzone']:CreatePoly("dumbcunt", _lb.polyZones.death.vertices, _lb.polyZones.death.options, _lb.polyZones.death.data)
 
-	exports['pulsar-polyzone']:CreatePoly("bank_lombank", {
-		vector2(-0.41744011640549, -933.08654785156),
-		vector2(14.137574195862, -893.74298095703),
-		vector2(47.590084075928, -905.93432617188),
-		vector2(31.678886413574, -949.58227539062),
-		vector2(1.5427644252777, -938.97210693359),
-	}, {
-		-- debugPoly = true,
-	})
+	exports['pulsar-polyzone']:CreatePoly("bank_lombank", _lb.polyZones.bank.vertices, _lb.polyZones.bank.options)
 
-	exports['pulsar-polyzone']:CreatePoly("lombank_power", {
-		vector2(43.716075897217, -811.39093017578),
-		vector2(43.310741424561, -812.01684570312),
-		vector2(46.399833679199, -813.21368408203),
-		vector2(42.919136047363, -823.21014404297),
-		vector2(49.144268035889, -825.46929931641),
-		vector2(53.048881530762, -814.73663330078),
-		vector2(46.760047912598, -812.44616699219),
-	}, {
-		-- debugPoly = true,
-		minZ = 29.4411277771,
-		maxZ = 34.817783355713,
-	}, {
-		isDeath = true,
-		tpCoords = vector3(2.593, -935.504, 29.905),
-		door = "pulsar_lombank_hidden_entrance",
-	})
+	exports['pulsar-polyzone']:CreatePoly("lombank_power", _lb.polyZones.power.vertices, _lb.polyZones.power.options, _lb.polyZones.power.data)
 
 	exports.ox_target:addBoxZone({
 		id = "lombank_secure",
-		coords = vector3(7.69, -923.1, 29.9),
-		size = vector3(2.8, 1.6, 2.0),
-		rotation = 340,
+		coords = _lb.secureZone.coords,
+		size = vector3(_lb.secureZone.length, _lb.secureZone.width, 2.0),
+		rotation = _lb.secureZone.options.heading,
 		debug = false,
-		minZ = 28.9,
-		maxZ = 30.7,
+		minZ = _lb.secureZone.options.minZ,
+		maxZ = _lb.secureZone.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-lock",
@@ -102,18 +63,9 @@ AddEventHandler("Robbery:Client:Setup", function()
 		}
 	})
 
-	exports['pulsar-polyzone']:CreateBox("lombank_death", vector3(24.86, -921.78, 25.74), 7.4, 7.8, {
-		heading = 340,
-		--debugPoly=true,
-		minZ = 24.74,
-		maxZ = 28.74,
-	}, {
-		isDeath = true,
-		tpCoords = vector3(2.593, -935.504, 29.905),
-		door = "pulsar_lombank_lasers",
-	})
+	exports['pulsar-polyzone']:CreateBox("lombank_death", _lb.deathBox.coords, _lb.deathBox.length, _lb.deathBox.width, _lb.deathBox.options, _lb.deathBox.data)
 
-	for k, v in ipairs(_lombankRooms) do
+	for k, v in ipairs(_lb.rooms) do
 		exports['pulsar-polyzone']:CreateBox(string.format("lombank_room_%s", v.roomId), v.coords, v.length, v.width,
 			v.options, {
 				isLombankRoom = true,
@@ -121,7 +73,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 			})
 	end
 
-	for k, v in ipairs(_lbPowerBoxes) do
+	for k, v in ipairs(_lb.powerBoxes) do
 		exports.ox_target:addBoxZone({
 			id = string.format("lombank_power_%s", v.data.boxId),
 			coords = v.coords,
@@ -165,7 +117,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		})
 	end
 
-	for k, v in ipairs(_lbUpperVaultPoints) do
+	for k, v in ipairs(_lb.upperVaultPoints) do
 		exports.ox_target:addBoxZone({
 			id = string.format("lombank_upper_%s", v.wallId),
 			coords = v.coords,
@@ -217,7 +169,7 @@ AddEventHandler("Polyzone:Enter", function(id, testedPoint, insideZones, data)
 	elseif data.isLombankRoom then
 		LocalPlayer.state:set("inLombankPower", false, true)
 		LocalPlayer.state:set("lombankRoom", data.roomId, true)
-		for k, v in ipairs(_lbCarts) do
+		for k, v in ipairs(_lb.carts) do
 			exports.ox_target:addModel(v, {
 				{
 					label = "Grab Loot",
@@ -258,7 +210,7 @@ AddEventHandler("Polyzone:Exit", function(id, testedPoint, insideZones, data)
 		if LocalPlayer.state.lombankRoom then
 			LocalPlayer.state:set("lombankRoom", false, true)
 		end
-		for k, v in ipairs(_lbCarts) do
+		for k, v in ipairs(_lb.carts) do
 			exports.ox_target:removeModel(v)
 		end
 	end

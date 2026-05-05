@@ -102,7 +102,7 @@ RegisterNetEvent("Robbery:Client:Fleeca:OpenVaultDoor", function(fleecaId)
 		local myCoords = GetEntityCoords(LocalPlayer.state.ped)
 		if #(myCoords - GlobalState[string.format("FleecaRobberies:%s", fleecaId)].coords) <= 100 then
 			OpenDoor(
-				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].points.vaultPC.coords,
+				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].points.laptopLoc.coords,
 				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].doors.vaultDoor
 			)
 		end
@@ -114,7 +114,7 @@ RegisterNetEvent("Robbery:Client:Fleeca:CloseVaultDoor", function(fleecaId)
 		local myCoords = GetEntityCoords(LocalPlayer.state.ped)
 		if #(myCoords - GlobalState[string.format("FleecaRobberies:%s", fleecaId)].coords) <= 100 then
 			CloseDoor(
-				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].points.vaultPC.coords,
+				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].points.laptopLoc.coords,
 				GlobalState[string.format("FleecaRobberies:%s", fleecaId)].doors.vaultDoor
 			)
 		end

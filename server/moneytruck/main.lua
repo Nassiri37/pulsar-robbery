@@ -1,6 +1,10 @@
-_moneyTruckPeds = {}
-_moneyTrucks = {}
+local _bct = RobberyConfig.moneytruck
+local _bc  = RobberyConfig.bobcat
+
+_moneyTruckPeds    = {}
+_moneyTrucks       = {}
 _truckSpawnEnabled = true
+_moneyTruckSpawns  = {}
 
 CreateThread(function()
 	while true do
@@ -62,7 +66,7 @@ AddEventHandler('entityCreated', function(entity)
 			if model == `stockade` then
 				_moneyTrucks[entity] = {
 					position = GetEntityCoords(entity),
-					delete = os.time() + (BCT_SPAWN_RATE / 1000),
+					delete = os.time() + (_bct.spawnRate / 1000),
 					entity = entity,
 					looted = false
 				}
@@ -78,9 +82,9 @@ AddEventHandler('entityRemoved', function(entity)
 end)
 
 AddEventHandler("Robbery:Server:Setup", function()
-	GlobalState["Bobcat:LootLocations"] = _bobcatLootLocs
+	GlobalState["Bobcat:LootLocations"] = _bc.lootZones
 
-	_moneyTruckSpawns = table.copy(_spawnHoldingShit)
+	_moneyTruckSpawns = table.copy(_bct.spawnHolding)
 
 	exports["pulsar-chat"]:RegisterAdminCommand("togglemoneytruck", function(source, args, rawCommand)
 		_truckSpawnEnabled = not _truckSpawnEnabled
@@ -96,7 +100,7 @@ end)
 
 function SpawnBobcatTruck(truckModel, skipCooldown)
 	if #_moneyTruckSpawns == 0 then
-		_moneyTruckSpawns = table.copy(_spawnHoldingShit)
+		_moneyTruckSpawns = table.copy(_bct.spawnHolding)
 	end
 
 	local p = promise.new()
@@ -118,7 +122,7 @@ function SpawnBobcatTruck(truckModel, skipCooldown)
 			function(veh, VIN)
 				_moneyTrucks[veh] = {
 					position = coords,
-					delete = os.time() + (BCT_SPAWN_RATE / 1000),
+					delete = os.time() + (_bct.spawnRate / 1000),
 					entity = veh,
 					looted = false
 				}
@@ -216,7 +220,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 
 						local model = GetEntityModel(ent)
 						if model == `stockade` then
-							exports.ox_inventory:LootCustomWeightedSetWithCount(_moneyTruckLoot.fleeca,
+							exports.ox_inventory:LootCustomWeightedSetWithCount(_bct.loot.fleeca,
 								char:GetData("SID"), 1)
 							exports.ox_inventory:AddItem(char:GetData("SID"), "crypto_voucher", 1, {
 								CryptoCoin = "HEIST",

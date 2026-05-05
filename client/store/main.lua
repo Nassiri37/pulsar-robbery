@@ -1,3 +1,4 @@
+local _st = RobberyConfig.store
 local _models = {
 	303280717,
 }
@@ -6,6 +7,9 @@ local _inPoly = nil
 local _polys = {}
 AddEventHandler("Robbery:Client:Setup", function()
 	_polys = {}
+	while not GlobalState["StoreRobberies"] do
+		Wait(10)
+	end
 	for k, v in pairs(GlobalState["StoreRobberies"]) do
 		exports['pulsar-polyzone']:CreateBox(v.id, v.coords, v.width, v.length, v.options)
 		_polys[v.id] = true
@@ -24,7 +28,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 				{
 					icon = "fas fa-unlock",
 					label = "Crack Safe",
-					item = "safecrack_kit",
+					item = _st.items.safeCrack,
 					onSelect = function()
 						TriggerEvent("Robbery:Client:Store:ActualCrackSafe", v.data)
 					end,
@@ -38,7 +42,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 				{
 					icon = "fas fa-terminal",
 					label = "Use Sequencer",
-					item = "sequencer",
+					item = _st.items.sequencer,
 					onSelect = function()
 						TriggerEvent("Robbery:Client:Store:SequenceSafe", v.data)
 					end,
@@ -94,7 +98,7 @@ AddEventHandler("Polyzone:Enter", function(id, testedPoint, insideZones, data)
 				{
 					icon = "fas fa-cash-register",
 					label = "Lockpick Register",
-					item = "lockpick",
+					item = _st.items.register,
 					onSelect = function(data)
 						TriggerEvent("Robbery:Client:Store:LockpickRegister", data)
 					end,
@@ -308,3 +312,4 @@ AddEventHandler("Robbery:Client:Store:SafeCrackFail", function(data)
 	data.store = _inPoly
 	exports["pulsar-core"]:ServerCallback("Robbery:Store:Safe", data, function(s) end)
 end)
+

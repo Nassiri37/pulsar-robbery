@@ -1,3 +1,4 @@
+local _fc        = RobberyConfig.fleeca
 local _threading = false
 function StartFleecaThreads()
 	if _threading then
@@ -7,7 +8,7 @@ function StartFleecaThreads()
 
 	CreateThread(function()
 		while _threading do
-			for k, v in pairs(FLEECA_LOCATIONS) do
+			for k, v in pairs(_fc.locations) do
 				if _fcGlobalReset[k] ~= nil and os.time() > _fcGlobalReset[k] then
 					exports['pulsar-core']:LoggerInfo("Robbery",
 						string.format("Fleeca - %s Heist Has Been Reset", v.label))
@@ -20,7 +21,7 @@ function StartFleecaThreads()
 
 	CreateThread(function()
 		while _threading do
-			for k, v in pairs(FLEECA_LOCATIONS) do
+			for k, v in pairs(_fc.locations) do
 				if
 					GlobalState[string.format("Fleeca:%s:VaultDoor", v.id)] ~= nil
 					and GlobalState[string.format("Fleeca:%s:VaultDoor", v.id)].state == 2

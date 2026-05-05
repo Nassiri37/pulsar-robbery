@@ -1,22 +1,13 @@
-local _loot = {
-	{ 8,  { name = "rolex", min = 5, max = 12 } },
-	{ 20, { name = "watch", min = 8, max = 14 } },
-	{ 30, { name = "chain", min = 8, max = 16 } },
-	{ 25, { name = "ring", min = 10, max = 20 } },
-	{ 25, { name = "earrings", min = 10, max = 22 } },
-}
+local _vg = RobberyConfig.vangelico
 
-local _requiredPd = 4
 local _alerted = nil
-
-local _notAllowedTill = 1000 * 60 * math.random(60, 70)
 local _caseResetTime = nil
 
 function PutShittyThingsOnCD()
 	local time = _caseResetTime or os.time() + (60 * math.random(100, 140))
 	GlobalState["Vangelico:State"] = 2
 	GlobalState["Vangelico:InProgress"] = false
-	for k, v in ipairs(VANG_CASES) do
+	for k, v in ipairs(_vg.cases) do
 		local pId = string.format("Vangelico:Case:%s", k)
 		GlobalState[pId] = time
 	end
@@ -25,7 +16,7 @@ function PutShittyThingsOnCD()
 		while time > os.time() do
 			Wait(5000)
 		end
-		for k, v in ipairs(VANG_CASES) do
+		for k, v in ipairs(_vg.cases) do
 			local pId = string.format("Vangelico:Case:%s", k)
 			GlobalState[pId] = nil
 		end
@@ -52,12 +43,12 @@ function StartJewelryTimer()
 end
 
 AddEventHandler("Robbery:Server:Setup", function()
-	GlobalState["VangelicoRequiredPd"] = _requiredPd
-	GlobalState["VangelicoCases"] = VANG_CASES
+	GlobalState["VangelicoRequiredPd"] = _vg.requiredPolice
+	GlobalState["VangelicoCases"] = _vg.cases
 
 	CreateThread(function()
 		GlobalState["Vangelico:State"] = 2
-		while GetGameTimer() < _notAllowedTill do
+		while GetGameTimer() < _vg.serverStartWait do
 			Wait(1000)
 		end
 		GlobalState["Vangelico:State"] = nil
@@ -130,7 +121,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					exports.ox_inventory:LootSetsGem(char:GetData("SID"), 1)
 				end
 
-				exports.ox_inventory:LootCustomWeightedSetWithCount(_loot, char:GetData("SID"), 1)
+				exports.ox_inventory:LootCustomWeightedSetWithCount(_vg.loot, char:GetData("SID"), 1)
 			end
 		end
 	end)

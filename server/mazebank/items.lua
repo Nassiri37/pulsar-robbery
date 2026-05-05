@@ -1,3 +1,5 @@
+local _mb = RobberyConfig.mazebank
+
 function RegisterMBItemUses()
 	exports.ox_inventory:RegisterUse("thermite", "MazeBankRobbery", function(source, itemData)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
@@ -14,7 +16,7 @@ function RegisterMBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -24,7 +26,7 @@ function RegisterMBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -42,7 +44,7 @@ function RegisterMBItemUses()
 
 				local myPos = GetEntityCoords(GetPlayerPed(source))
 
-				for k, v in pairs(_mbDoors) do
+				for k, v in pairs(_mb.doors) do
 					if exports['ox_doorlock']:IsLocked(v.door) and #(v.coords - myPos) <= 1.5 then
 						if AreRequirementsUnlocked(v.requiredDoors) then
 							if not _mbInUse[k] then
@@ -102,7 +104,7 @@ function RegisterMBItemUses()
 												GlobalState["AntiShitlord"] = os.time() + (60 * math.random(10, 15))
 											end
 
-											_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+											_mbGlobalReset = os.time() + _mb.resetTime
 											exports['ox_doorlock']:SetLock(v.door, false)
 											if not _mbAlerted or os.time() > _mbAlerted then
 												exports['pulsar-robbery']:TriggerPDAlert(
@@ -127,7 +129,7 @@ function RegisterMBItemUses()
 												exports['pulsar-status']:Add(source, "PLAYER_STRESS", 3)
 											end
 										else
-											_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+											_mbGlobalReset = os.time() + _mb.resetTime
 											exports['pulsar-status']:Add(source, "PLAYER_STRESS", 6)
 										end
 
@@ -173,7 +175,7 @@ function RegisterMBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -183,7 +185,7 @@ function RegisterMBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -199,7 +201,7 @@ function RegisterMBItemUses()
 					return
 				end
 
-				for k, v in pairs(_mbHacks) do
+				for k, v in pairs(_mb.hacks) do
 					if #(v.coords - myCoords) <= 1.5 then
 						if
 							GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] == nil
@@ -248,7 +250,7 @@ function RegisterMBItemUses()
 
 											exports.ox_inventory:RemoveSlot(slot.Owner, slot.Name, 1, slot.Slot,
 												1)
-											_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+											_mbGlobalReset = os.time() + _mb.resetTime
 											GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] = {
 												state = 2,
 												expires = os.time() + (60 * timer),
@@ -275,7 +277,7 @@ function RegisterMBItemUses()
 												exports.ox_inventory:SetItemCreateDate(slot.id, newValue)
 											end
 
-											_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+											_mbGlobalReset = os.time() + _mb.resetTime
 											exports['pulsar-status']:Add(source, "PLAYER_STRESS", 6)
 										end
 										_mbInUse[k] = false
@@ -319,7 +321,7 @@ function RegisterMBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -329,7 +331,7 @@ function RegisterMBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -345,7 +347,7 @@ function RegisterMBItemUses()
 					return
 				end
 
-				for k, v in ipairs(_mbOfficeDoors) do
+				for k, v in ipairs(_mb.officeDoors) do
 					if #(v.coords - myCoords) <= 1.5 then
 						if AreRequirementsUnlocked(v.requiredDoors) then
 							if not _mbInUse[v.door] then
@@ -389,7 +391,7 @@ function RegisterMBItemUses()
 										)
 
 										GlobalState["Fleeca:Disable:mazebank_baycity"] = true
-										_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+										_mbGlobalReset = os.time() + _mb.resetTime
 										exports['ox_doorlock']:SetLock(v.door, false)
 										exports['pulsar-status']:Add(source, "PLAYER_STRESS", 3)
 									else
@@ -404,7 +406,7 @@ function RegisterMBItemUses()
 											)
 										)
 
-										_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+										_mbGlobalReset = os.time() + _mb.resetTime
 										exports['ox_doorlock']:SetLock(v.door, true)
 										exports['pulsar-status']:Add(source, "PLAYER_STRESS", 6)
 

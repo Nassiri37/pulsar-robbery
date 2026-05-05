@@ -1,21 +1,14 @@
-local atmObjects = {
-    `prop_atm_01`,
-    `prop_atm_02`,
-    `prop_atm_03`,
-    `prop_fleeca_atm`,
-}
+local _atm = RobberyConfig.atms
 
 local _atmZone
 local _blip
 
-local _phoneApp = {
-    color = '#247919',
-    label = 'Root',
-    icon = 'terminal',
-}
-
 AddEventHandler("Robbery:Client:Setup", function()
+    while not GlobalState["ATMRobberyTerminal"] do
+        Wait(10)
+    end
     local atmRobbery = GlobalState["ATMRobberyTerminal"]
+
     exports.ox_target:addBoxZone({
         id = "atm-robbery-terminal",
         coords = atmRobbery.coords,
@@ -29,7 +22,7 @@ AddEventHandler("Robbery:Client:Setup", function()
                 icon = "fas fa-eye-slash",
                 label = "Do Illegal Things",
                 event = "Robbery:Client:ATM:UseTerminal",
-                item = "vpn",
+                item = _atm.items.terminal,
                 canInteract = function()
                     return not LocalPlayer.state.ATMRobbery or LocalPlayer.state.ATMRobbery <= 0
                 end,
@@ -37,7 +30,7 @@ AddEventHandler("Robbery:Client:Setup", function()
         }
     })
 
-    for k, v in ipairs(atmObjects) do
+    for k, v in ipairs(_atm.objects) do
         exports.ox_target:addModel(v, {
             {
                 label = "Run Exploit",
@@ -77,7 +70,7 @@ AddEventHandler("Robbery:Client:ATM:UseTerminal", function()
                             if location then
                                 exports['pulsar-phone']:NotificationAdd("No More!",
                                     "You already have done too much today...",
-                                    GetCloudTimeAsInt(), 7500, _phoneApp, {}, nil)
+                                    GetCloudTimeAsInt(), 7500, _atm.phoneApp, {}, nil)
                             end
                         end
                     end)
@@ -87,7 +80,7 @@ AddEventHandler("Robbery:Client:ATM:UseTerminal", function()
 
                     exports['pulsar-phone']:NotificationAdd("Not Today Failure", "Your skills are useless to us...",
                         GetCloudTimeAsInt(),
-                        7500, _phoneApp, {}, nil)
+                        7500, _atm.phoneApp, {}, nil)
                 end,
             }, {
                 playableWhileDead = false,
@@ -100,12 +93,12 @@ AddEventHandler("Robbery:Client:ATM:UseTerminal", function()
         else
             exports['pulsar-phone']:NotificationAdd("Busy at the Moment", "Sorry, please try again in a minute.",
                 GetCloudTimeAsInt(),
-                7500, _phoneApp, {}, nil)
+                7500, _atm.phoneApp, {}, nil)
         end
     else
         exports['pulsar-phone']:NotificationAdd("Come Back Later", "Sorry, please try again when it's dark.",
             GetCloudTimeAsInt(), 7500,
-            _phoneApp, {}, nil)
+            _atm.phoneApp, {}, nil)
     end
 end)
 
@@ -130,7 +123,7 @@ function StartATMRobbery(location, firstLocation)
     if not firstLocation then
         exports['pulsar-phone']:NotificationAddWithId("ATMRobbery", "Well Done - Next!",
             "Access an ATM in the new highlighted area",
-            GetCloudTimeAsInt() * 1000, -1, _phoneApp, {
+            GetCloudTimeAsInt() * 1000, -1, _atm.phoneApp, {
                 accept = "dicks",
             }, nil)
     end
@@ -203,7 +196,7 @@ AddEventHandler('Robbery:Client:ATM:StartHack', function(entity)
                             else
                                 exports['pulsar-phone']:NotificationAdd("Done",
                                     "We hope to work with you more in the future.",
-                                    GetCloudTimeAsInt(), 7500, _phoneApp, {}, nil)
+                                    GetCloudTimeAsInt(), 7500, _atm.phoneApp, {}, nil)
                             end
                         end
 
@@ -230,7 +223,7 @@ AddEventHandler('Robbery:Client:ATM:StartHack', function(entity)
 
                     exports['pulsar-phone']:NotificationAdd("Failed", "I can't believe you just did this.",
                         GetCloudTimeAsInt(), 7500,
-                        _phoneApp, {}, nil)
+                        _atm.phoneApp, {}, nil)
                 end)
             end,
         }, {

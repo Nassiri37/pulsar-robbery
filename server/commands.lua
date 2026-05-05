@@ -1,3 +1,5 @@
+local _fc = RobberyConfig.fleeca
+
 function RegisterCommands()
 	exports["pulsar-chat"]:RegisterAdminCommand("resetheist", function(source, args, rawCommand)
 		if args[1] == "mazebank" then
@@ -11,10 +13,10 @@ function RegisterCommands()
 			exports['pulsar-hud']:Notification(source, "success", "Paleto Bank Heist Reset")
 		elseif args[1] == "bobcat" then
 			ResetBobcat()
-		elseif args[1]:find("fleeca") and FLEECA_LOCATIONS[args[1]] ~= nil then
+		elseif args[1]:find("fleeca") and _fc.locations[args[1]] ~= nil then
 			ResetFleeca(args[1])
 			exports['pulsar-hud']:Notification(source, "success",
-				string.format("Fleeca %s Reset", FLEECA_LOCATIONS[args[1]].label)
+				string.format("Fleeca %s Reset", _fc.locations[args[1]].label)
 			)
 		else
 			exports['pulsar-hud']:Notification(source, "error", "Invalid Bank ID")
@@ -141,7 +143,7 @@ function RegisterCommands()
 				end
 			elseif args[1] == "fleeca" then
 				local str = "<b>Fleeca Cooldowns</b>:<ul>"
-				for k, v in pairs(FLEECA_LOCATIONS) do
+				for k, v in pairs(_fc.locations) do
 					if not _fcGlobalReset[k] then
 						str = str .. string.format("<li><b>%s</b>: Not Yet Hit</li>", v.label)
 					else
@@ -164,8 +166,8 @@ function RegisterCommands()
 				end
 				local str = str .. "</ul>"
 				exports["pulsar-chat"]:SendSystemSingle(source, str)
-			elseif args[1]:find("fleeca") and FLEECA_LOCATIONS[args[1]] ~= nil then
-				local fleecaData = FLEECA_LOCATIONS[args[1]]
+			elseif args[1]:find("fleeca") and _fc.locations[args[1]] ~= nil then
+				local fleecaData = _fc.locations[args[1]]
 				if not _fcGlobalReset[args[1]] then
 					exports["pulsar-chat"]:SendSystemSingle(source,
 						string.format("Fleeca - %s: Not Yet Hit", fleecaData.label))
@@ -196,7 +198,7 @@ function RegisterCommands()
 		else
 			local str = "<ul>"
 
-			for k, v in pairs(FLEECA_LOCATIONS) do
+			for k, v in pairs(_fc.locations) do
 				if not _fcGlobalReset[k] then
 					str = str .. string.format("<li><b>Fleeca %s</b>: Not Yet Hit</li>", v.label)
 				else

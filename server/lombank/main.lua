@@ -1,3 +1,5 @@
+local _lb = RobberyConfig.lombank
+
 _lbInUse = {
 	lobbyGate = false,
 	vaultGate = false,
@@ -39,7 +41,7 @@ function LombankClearSourceInUse(source)
 end
 
 function IsLBPowerDisabled()
-	for k, v in ipairs(_lbPowerBoxes) do
+	for k, v in ipairs(_lb.powerBoxes) do
 		if
 			GlobalState[string.format("Lombank:Power:%s", v.data.boxId)] == nil
 			or os.time() > GlobalState[string.format("Lombank:Power:%s", v.data.boxId)]
@@ -52,9 +54,9 @@ end
 
 function LombankDisablePower(source)
 	if not _lbGlobalReset or os.time() > _lbGlobalReset then
-		_lbGlobalReset = os.time() + LOMBANK_RESET_TIME
+		_lbGlobalReset = os.time() + _lb.resetTime
 	end
-	for k, v in ipairs(_lbPowerBoxes) do
+	for k, v in ipairs(_lb.powerBoxes) do
 		GlobalState[string.format("Lombank:Power:%s", v.data.boxId)] = _lbGlobalReset
 	end
 
@@ -87,21 +89,21 @@ function AreRequirementsUnlocked(reqs)
 end
 
 function ResetLombank()
-	for k, v in pairs(_lbPowerBoxes) do
+	for k, v in pairs(_lb.powerBoxes) do
 		GlobalState[string.format("Lombank:Power:%s", v.data.boxId)] = nil
 	end
 
-	for k, v in pairs(_lbUpperVaultPoints) do
+	for k, v in pairs(_lb.upperVaultPoints) do
 		GlobalState[string.format("Lombank:Upper:Wall:%s", v.wallId)] = nil
 	end
 
 	exports['ox_doorlock']:SetLock("lombank_lasers", true)
 	exports['pulsar-cctv']:StateGroupOnline("lombank")
-	for k, v in pairs(lbThermPoints) do
+	for k, v in pairs(_lb.thermitePoints) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in pairs(_lbHackPoints) do
+	for k, v in pairs(_lb.hackPoints) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
@@ -126,23 +128,23 @@ function ResetLombank()
 end
 
 function SecureLombank()
-	_lbGlobalReset = os.time() + LOMBANK_RESET_TIME
+	_lbGlobalReset = os.time() + _lb.resetTime
 
-	for k, v in pairs(_lbPowerBoxes) do
+	for k, v in pairs(_lb.powerBoxes) do
 		GlobalState[string.format("Lombank:Power:%s", v.data.boxId)] = nil
 	end
 
-	for k, v in pairs(_lbUpperVaultPoints) do
+	for k, v in pairs(_lb.upperVaultPoints) do
 		GlobalState[string.format("Lombank:Upper:Wall:%s", v.wallId)] = nil
 	end
 
 	exports['ox_doorlock']:SetLock("lombank_lasers", true)
 	exports['pulsar-cctv']:StateGroupOnline("lombank")
-	for k, v in pairs(lbThermPoints) do
+	for k, v in pairs(_lb.thermitePoints) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in pairs(_lbHackPoints) do
+	for k, v in pairs(_lb.hackPoints) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
@@ -204,7 +206,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				)]
 				== nil
 				and not _lbInUse.carts[string.format("%s-%s", math.ceil(data.coords.x), math.ceil(data.coords.y))]
-				and not exports['ox_doorlock']:IsLocked(lbThermPoints[string.format("lowerVaultRoom%s", pState.lombankRoom)].door)
+				and not exports['ox_doorlock']:IsLocked(_lb.thermitePoints[string.format("lowerVaultRoom%s", pState.lombankRoom)].door)
 			then
 				GlobalState["LombankInProgress"] = true
 				exports['pulsar-core']:LoggerInfo(
@@ -248,7 +250,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				)]
 				== nil
 				and _lbInUse.carts[string.format("%s-%s", math.ceil(data.coords.x), math.ceil(data.coords.y))] == source
-				and not exports['ox_doorlock']:IsLocked(lbThermPoints[string.format("lowerVaultRoom%s", pState.lombankRoom)].door)
+				and not exports['ox_doorlock']:IsLocked(_lb.thermitePoints[string.format("lowerVaultRoom%s", pState.lombankRoom)].door)
 			then
 				exports.ox_inventory:LootCustomWeightedSetWithCount(_lbLoot, char:GetData("SID"), 1)
 
@@ -305,7 +307,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -315,7 +317,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -396,7 +398,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									end
 
 									if not _lbGlobalReset or os.time() > _lbGlobalReset then
-										_lbGlobalReset = os.time() + LOMBANK_RESET_TIME
+										_lbGlobalReset = os.time() + _lb.resetTime
 									end
 
 									GlobalState[string.format("Lombank:Power:%s", data.boxId)] = _lbGlobalReset
@@ -495,7 +497,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -505,7 +507,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -587,7 +589,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										end
 
 										if not _lbGlobalReset or os.time() > _lbGlobalReset then
-											_lbGlobalReset = os.time() + LOMBANK_RESET_TIME
+											_lbGlobalReset = os.time() + _lb.resetTime
 										end
 
 										GlobalState[string.format("Lombank:Power:%s", data.boxId)] = _lbGlobalReset
@@ -696,7 +698,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -706,7 +708,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -779,7 +781,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 									end
 
 									if not _lbGlobalReset or os.time() > _lbGlobalReset then
-										_lbGlobalReset = os.time() + LOMBANK_RESET_TIME
+										_lbGlobalReset = os.time() + _lb.resetTime
 									end
 
 									exports.ox_inventory:LootCustomWeightedSetWithCount(_lbUpperLoot,

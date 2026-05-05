@@ -1,3 +1,5 @@
+local _mb = RobberyConfig.mazebank
+
 _mbInUse = {
 	mazebank_gate = false,
 	mazebank_tills = false,
@@ -42,7 +44,7 @@ function MazeBankClearSourceInUse(source)
 end
 
 function IsMBPowerDisabled()
-	for k, v in ipairs(_mbElectric) do
+	for k, v in ipairs(_mb.electric) do
 		if
 			not GlobalState[string.format("MazeBank:Power:%s", v.data.boxId)]
 			or os.time() > GlobalState[string.format("MazeBank:Power:%s", v.data.boxId)]
@@ -55,9 +57,9 @@ end
 
 function MazeBankDisablePower(source)
 	if not _mbGlobalReset or os.time() > _mbGlobalReset then
-		_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+		_mbGlobalReset = os.time() + _mb.resetTime
 	end
-	for k, v in ipairs(_mbElectric) do
+	for k, v in ipairs(_mb.electric) do
 		GlobalState[string.format("MazeBank:Power:%s", v.data.boxId)] = _mbGlobalReset
 	end
 
@@ -77,29 +79,29 @@ end
 function ResetMazeBank()
 	_mbGlobalReset = nil
 
-	for k, v in pairs(_mbElectric) do
+	for k, v in pairs(_mb.electric) do
 		GlobalState[string.format("MazeBank:Power:%s", v.data.boxId)] = nil
 	end
 
-	for k, v in ipairs(_mbDrillPoints) do
+	for k, v in ipairs(_mb.drillPoints) do
 		GlobalState[string.format("MazeBank:Vault:Wall:%s", v.data.wallId)] = nil
 	end
 
-	for k, v in ipairs(_mbDesks) do
+	for k, v in ipairs(_mb.desks) do
 		GlobalState[string.format("MazeBank:Offices:PC:%s", v.data.deskId)] = nil
 	end
 
 	exports['ox_doorlock']:SetLock("pulsar_mazebank_offices", true)
 	exports['pulsar-cctv']:StateGroupOnline("mazebank")
-	for k, v in pairs(_mbDoors) do
+	for k, v in pairs(_mb.doors) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in ipairs(_mbOfficeDoors) do
+	for k, v in ipairs(_mb.officeDoors) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in ipairs(_mbHacks) do
+	for k, v in ipairs(_mb.hacks) do
 		GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] = nil
 		TriggerClientEvent("Robbery:Client:MazeBank:CloseVaultDoor", -1, v)
 	end
@@ -117,31 +119,31 @@ function ResetMazeBank()
 end
 
 function SecureMazeBank()
-	_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+	_mbGlobalReset = os.time() + _mb.resetTime
 
-	for k, v in pairs(_mbElectric) do
+	for k, v in pairs(_mb.electric) do
 		GlobalState[string.format("MazeBank:Power:%s", v.data.boxId)] = nil
 	end
 
-	for k, v in ipairs(_mbDrillPoints) do
+	for k, v in ipairs(_mb.drillPoints) do
 		GlobalState[string.format("MazeBank:Vault:Wall:%s", v.data.wallId)] = nil
 	end
 
-	for k, v in ipairs(_mbDesks) do
+	for k, v in ipairs(_mb.desks) do
 		GlobalState[string.format("MazeBank:Offices:PC:%s", v.data.deskId)] = nil
 	end
 
 	exports['ox_doorlock']:SetLock("pulsar_mazebank_offices", true)
 	exports['pulsar-cctv']:StateGroupOnline("mazebank")
-	for k, v in ipairs(_mbDoors) do
+	for k, v in ipairs(_mb.doors) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in ipairs(_mbOfficeDoors) do
+	for k, v in ipairs(_mb.officeDoors) do
 		exports['ox_doorlock']:SetLock(v.door, true)
 	end
 
-	for k, v in ipairs(_mbHacks) do
+	for k, v in ipairs(_mb.hacks) do
 		GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] = {
 			state = 4,
 			expires = _mbGlobalReset,
@@ -192,7 +194,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -202,7 +204,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -284,7 +286,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										GlobalState["AntiShitlord"] = os.time() + (60 * math.random(10, 15))
 									end
 
-									_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+									_mbGlobalReset = os.time() + _mb.resetTime
 
 								GlobalState[string.format("MazeBank:Power:%s", data.boxId)] = _mbGlobalReset
 								TriggerEvent("Particles:Server:DoFx", data.ptFxPoint, "spark")
@@ -389,7 +391,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -399,7 +401,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -483,7 +485,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 											GlobalState["AntiShitlord"] = os.time() + (60 * math.random(10, 15))
 										end
 
-										_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+										_mbGlobalReset = os.time() + _mb.resetTime
 
 									GlobalState[string.format("MazeBank:Power:%s", data.boxId)] = _mbGlobalReset
 									TriggerEvent("Particles:Server:DoFx", data.ptFxPoint, "spark")
@@ -591,7 +593,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -601,7 +603,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -678,7 +680,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										GlobalState["AntiShitlord"] = os.time() + (60 * math.random(10, 15))
 									end
 
-									_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+									_mbGlobalReset = os.time() + _mb.resetTime
 
 									exports.ox_inventory:LootCustomWeightedSetWithCount(_mbLoot,
 										char:GetData("SID"), 1)
@@ -732,7 +734,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < MAZEBANK_SERVER_START_WAIT
+						GetGameTimer() < _mb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["MazeBankInProgress"])
 					)
 				then
@@ -742,7 +744,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < MAZEBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _mb.requiredPolice
 					and not GlobalState["MazeBankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -812,7 +814,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 										GlobalState["AntiShitlord"] = os.time() + (60 * math.random(10, 15))
 									end
 
-									_mbGlobalReset = os.time() + MAZEBANK_RESET_TIME
+									_mbGlobalReset = os.time() + _mb.resetTime
 
 									GlobalState["Fleeca:Disable:mazebank_baycity"] = true
 									GlobalState[string.format("MazeBank:Offices:PC:%s", data.id)] = _mbGlobalReset

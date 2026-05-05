@@ -1,3 +1,5 @@
+local _lb = RobberyConfig.lombank
+
 function RegisterLBItemUses()
 	exports.ox_inventory:RegisterUse("thermite", "LombankRobbery", function(source, itemData)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
@@ -14,7 +16,7 @@ function RegisterLBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -24,7 +26,7 @@ function RegisterLBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -42,7 +44,7 @@ function RegisterLBItemUses()
 
 				local myPos = GetEntityCoords(GetPlayerPed(source))
 
-				for k, v in pairs(lbThermPoints) do
+				for k, v in pairs(_lb.thermitePoints) do
 					if exports['ox_doorlock']:IsLocked(v.door) and #(v.coords - myPos) <= 1.5 then
 						if AreRequirementsUnlocked(v.requiredDoors) then
 							if not _lbInUse[k] then
@@ -167,7 +169,7 @@ function RegisterLBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -177,7 +179,7 @@ function RegisterLBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -320,7 +322,7 @@ function RegisterLBItemUses()
 				if
 					GlobalState["RestartLockdown"] ~= false
 					and (
-						GetGameTimer() < LOMBANK_SERVER_START_WAIT
+						GetGameTimer() < _lb.serverStartWait
 						or (GlobalState["RestartLockdown"] and not GlobalState["LombankInProgress"])
 					)
 				then
@@ -330,7 +332,7 @@ function RegisterLBItemUses()
 					)
 					return
 				elseif
-					(GlobalState["Duty:police"] or 0) < LOMBANK_REQUIRED_POLICE
+					(GlobalState["Duty:police"] or 0) < _lb.requiredPolice
 					and not GlobalState["LombankInProgress"]
 				then
 					exports['pulsar-hud']:Notification(source, "error",
@@ -346,7 +348,7 @@ function RegisterLBItemUses()
 					return
 				end
 
-				for k, v in pairs(_lbHackPoints) do
+				for k, v in pairs(_lb.hackPoints) do
 					if #(v.coords - myCoords) <= 1.5 then
 						if AreRequirementsUnlocked(v.requiredDoors) then
 							if not _lbInUse[k] then

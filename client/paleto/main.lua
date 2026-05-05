@@ -1,11 +1,13 @@
+local _pb = RobberyConfig.paleto
 local _sbChangeHandlers = {}
+local _activePcTargets = {}
 
 function PaletoNeedsReset()
 	if _bankStates.paleto.workstation or _bankStates.paleto.vaultTerminal then
 		return true
 	end
 
-	for k, v in ipairs(_pbDoorIds) do
+	for k, v in ipairs(_pb.doorIds) do
 		if not exports['ox_doorlock']:IsLocked(v) then
 			return true
 		end
@@ -37,48 +39,18 @@ function PaletoNeedsReset()
 end
 
 AddEventHandler("Robbery:Client:Setup", function()
-	exports['pulsar-polyzone']:CreatePoly("bank_paleto", {
-		-- vector2(-102.71809387207, 6450.455078125),
-		-- vector2(-103.4940032959, 6447.8139648438),
-		-- vector2(-104.5740814209, 6447.9951171875),
-		-- vector2(-103.34963226318, 6451.4379882812),
-		-- vector2(-111.12901306152, 6459.4956054688),
-		-- vector2(-109.9501953125, 6460.8173828125),
-		-- vector2(-112.78342437744, 6463.6616210938),
-		-- vector2(-113.99594116211, 6462.578125),
-		-- vector2(-123.86438751221, 6472.3857421875),
-		-- vector2(-115.0514755249, 6481.14453125),
-		-- vector2(-113.489112854, 6479.6889648438),
-		-- vector2(-107.47613525391, 6485.4438476562),
-		-- vector2(-88.173873901367, 6465.876953125),
-		-- vector2(-93.701072692871, 6460.7612304688),
-		-- vector2(-93.123313903809, 6460.1650390625),
-		vector2(-129.5386505127, 6470.3793945312),
-		vector2(-103.76642608643, 6444.1923828125),
-		vector2(-82.150863647461, 6466.1552734375),
-		vector2(-107.7488861084, 6491.7861328125),
-	}, {
-		--debugPoly = true,
-	})
+	exports['pulsar-polyzone']:CreatePoly("bank_paleto", _pb.polyZone, {})
 
-	exports['pulsar-polyzone']:CreateCircle("paleto_power", vector3(-169.13, 6296.62, 31.49), 1000.0, {
-		useZ = false,
-		--debugPoly=true
-	})
+	exports['pulsar-polyzone']:CreateCircle("paleto_power", _pb.powerCircle.center, _pb.powerCircle.radius, _pb.powerCircle.options)
 
-	exports['pulsar-polyzone']:CreateBox("paleto_hack_access", vector3(-107.04, 6474.16, 31.63), 1.8, 1.2, {
-		heading = 315,
-		--debugPoly=true,
-		minZ = 30.63,
-		maxZ = 32.63,
-	}, {})
+	exports['pulsar-polyzone']:CreateBox("paleto_hack_access", _pb.hackAccessBox.coords, _pb.hackAccessBox.length, _pb.hackAccessBox.width, _pb.hackAccessBox.options, {})
 
-	for k, v in ipairs(_pbKillZones) do
+	for k, v in ipairs(_pb.killZones) do
 		exports['pulsar-polyzone']:CreateBox(string.format("pb_killzone_%s", k), v.coords, v.length, v.width, v.options,
 			v.data)
 	end
 
-	for k, v in ipairs(_pbPCHackAreas) do
+	for k, v in ipairs(_pb.pcHackAreas) do
 		exports['pulsar-polyzone']:CreateBox(
 			string.format("paleto_hack_pc_%s", v.data.pcId),
 			v.coords,
@@ -89,7 +61,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		)
 	end
 
-	for k, v in ipairs(_pbSubStationZones) do
+	for k, v in ipairs(_pb.subStationZones) do
 		exports['pulsar-polyzone']:CreateBox(
 			string.format("pb_substation_%s", v.data.subStationId),
 			v.coords,
@@ -102,12 +74,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "paleto_secure",
-		coords = vector3(-109.57, 6461.51, 31.64),
-		size = vector3(0.6, 0.4, 2.0),
-		rotation = 315,
+		coords = _pb.targets.secure.coords,
+		size = vector3(_pb.targets.secure.length, _pb.targets.secure.width, 2.0),
+		rotation = _pb.targets.secure.options.heading,
 		debug = false,
-		minZ = 31.24,
-		maxZ = 32.84,
+		minZ = _pb.targets.secure.options.minZ,
+		maxZ = _pb.targets.secure.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-lock",
@@ -130,12 +102,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "paleto_security",
-		coords = vector3(-91.76, 6464.78, 31.63),
-		size = vector3(1.4, 0.8, 2.0),
-		rotation = 315,
+		coords = _pb.targets.security.coords,
+		size = vector3(_pb.targets.security.length, _pb.targets.security.width, 2.0),
+		rotation = _pb.targets.security.options.heading,
 		debug = false,
-		minZ = 30.63,
-		maxZ = 32.43,
+		minZ = _pb.targets.security.options.minZ,
+		maxZ = _pb.targets.security.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-bell",
@@ -151,12 +123,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "paleto_hack_workstation",
-		coords = vector3(-106.12, 6473.87, 31.63),
-		size = vector3(1.2, 0.6, 2.0),
-		rotation = 315,
+		coords = _pb.targets.workstation.coords,
+		size = vector3(_pb.targets.workstation.length, _pb.targets.workstation.width, 2.0),
+		rotation = _pb.targets.workstation.options.heading,
 		debug = false,
-		minZ = 31.03,
-		maxZ = 32.43,
+		minZ = _pb.targets.workstation.options.minZ,
+		maxZ = _pb.targets.workstation.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-network-wired",
@@ -181,7 +153,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		}
 	})
 
-	for k, v in ipairs(_pbOfficeHacks) do
+	for k, v in ipairs(_pb.officeHacks) do
 		exports.ox_target:addBoxZone({
 			id = string.format("paleto_officehack_%s", k),
 			coords = v.coords,
@@ -220,7 +192,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		})
 	end
 
-	for k, v in ipairs(_pbPowerHacks) do
+	for k, v in ipairs(_pb.powerHacks) do
 		exports.ox_target:addBoxZone({
 			id = string.format("paleto_electricbox_%s", k),
 			coords = v.coords,
@@ -247,7 +219,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		})
 	end
 
-	for k, v in ipairs(_pbLasers) do
+	for k, v in ipairs(_pb.lasers) do
 		exports['pulsar-lasers']:Create(
 			string.format("paleto_lasers_%s", k),
 			v.origins,
@@ -262,7 +234,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		)
 	end
 
-	for k, v in ipairs(_pbDrillPoints) do
+	for k, v in ipairs(_pb.drillPoints) do
 		exports.ox_target:addBoxZone({
 			id = string.format("paleto_drillpoint_%s", v.data.drillId),
 			coords = v.coords,
@@ -295,12 +267,12 @@ AddEventHandler("Robbery:Client:Setup", function()
 
 	exports.ox_target:addBoxZone({
 		id = "paleto_office_safe",
-		coords = vector3(-105.27, 6480.67, 31.63),
-		size = vector3(0.8, 0.6, 2.0),
-		rotation = 45,
+		coords = _pb.targets.officeSafe.coords,
+		size = vector3(_pb.targets.officeSafe.length, _pb.targets.officeSafe.width, 2.0),
+		rotation = _pb.targets.officeSafe.options.heading,
 		debug = false,
-		minZ = 31.43,
-		maxZ = 32.83,
+		minZ = _pb.targets.officeSafe.options.minZ,
+		maxZ = _pb.targets.officeSafe.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-unlock",
@@ -316,7 +288,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		}
 	})
 
-	for k, v in ipairs(_pbOfficeSearch) do
+	for k, v in ipairs(_pb.officeSearch) do
 		exports.ox_target:addBoxZone({
 			id = string.format("paleto_searchpoint_%s", v.data.searchId),
 			coords = v.coords,
@@ -353,32 +325,43 @@ AddEventHandler("Polyzone:Enter", function(id, testedPoint, insideZones, data)
 		LocalPlayer.state:set("inPaletoBank", true, true)
 
 		local powerDisabled = IsPaletoPowerDisabled()
-		for k, v in ipairs(_pbLasers) do
+		for k, v in ipairs(_pb.lasers) do
 			exports['pulsar-lasers']:SetActive(string.format("paleto_lasers_%s", k), not powerDisabled)
 			exports['pulsar-lasers']:SetVisible(string.format("paleto_lasers_%s", k), not powerDisabled)
 		end
 	elseif id == "paleto_hack_access" and not exports['ox_doorlock']:IsLocked("bank_savings_paleto_gate") then
 		LocalPlayer.state:set("inPaletoWSPoint", true, true)
-	elseif data.subStationId ~= nil then
+	elseif data and data.subStationId ~= nil then
 		LocalPlayer.state:set("inSubStation", data.subStationId, true)
-	elseif data.pcId ~= nil then
-		exports.ox_target:addModel(GetHashKey("xm_prop_base_staff_desk_02"), {
-			{
-				label = "Upload Exploit",
-				icon = "fas fa-terminal",
-				pcId = data.pcId,
-				onSelect = function()
-					TriggerEvent("Robbery:Client:Paleto:Upload", data)
-				end,
-				item = "adv_electronics_kit",
-				distance = 2.0,
-				canInteract = function(entity, opts)
-					return (not GlobalState["Paleto:Secured"] or GetCloudTimeAsInt() > GlobalState["Paleto:Secured"])
-						and (
-							not _bankStates.paleto.exploits[opts.pcId]
-							or GetCloudTimeAsInt() > _bankStates.paleto.exploits[opts.pcId]
-						)
-				end,
+	elseif data and data.pcId ~= nil then
+		local pcArea = _pb.pcHackAreas[data.pcId]
+		local t = pcArea.target
+		_activePcTargets[data.pcId] = true
+		exports.ox_target:addBoxZone({
+			id = string.format("paleto_hack_pc_target_%s", data.pcId),
+			coords = t.coords,
+			size = vector3(t.length, t.width, 2.0),
+			rotation = t.options.heading or 0,
+			debug = false,
+			minZ = t.options.minZ,
+			maxZ = t.options.maxZ,
+			options = {
+				{
+					label = "Upload Exploit",
+					icon = "fas fa-terminal",
+					pcId = data.pcId,
+					onSelect = function()
+						TriggerEvent("Robbery:Client:Paleto:Upload", data)
+					end,
+					item = "adv_electronics_kit",
+					canInteract = function()
+						return (not GlobalState["Paleto:Secured"] or GetCloudTimeAsInt() > GlobalState["Paleto:Secured"])
+							and (
+								not _bankStates.paleto.exploits[data.pcId]
+								or GetCloudTimeAsInt() > _bankStates.paleto.exploits[data.pcId]
+							)
+					end,
+				},
 			},
 		})
 	elseif id == "paleto_power" then
@@ -391,7 +374,7 @@ AddEventHandler("Polyzone:Exit", function(id, testedPoint, insideZones, data)
 		if LocalPlayer.state.inPaletoBank then
 			LocalPlayer.state:set("inPaletoBank", false, true)
 		end
-		for k, v in ipairs(_pbLasers) do
+		for k, v in ipairs(_pb.lasers) do
 			exports['pulsar-lasers']:SetActive(string.format("paleto_lasers_%s", k), false)
 			exports['pulsar-lasers']:SetVisible(string.format("paleto_lasers_%s", k), false)
 		end
@@ -399,12 +382,15 @@ AddEventHandler("Polyzone:Exit", function(id, testedPoint, insideZones, data)
 		if LocalPlayer.state.inPaletoWSPoint then
 			LocalPlayer.state:set("inPaletoWSPoint", false, true)
 		end
-	elseif data.subStationId ~= nil then
+	elseif data and data.subStationId ~= nil then
 		if LocalPlayer.state.inSubStation then
 			LocalPlayer.state:set("inSubStation", false, true)
 		end
-	elseif data.pcId ~= nil then
-		exports.ox_target:removeModel(GetHashKey("xm_prop_base_staff_desk_02"))
+	elseif data and data.pcId ~= nil then
+		if _activePcTargets[data.pcId] then
+			_activePcTargets[data.pcId] = nil
+			exports.ox_target:removeZone(string.format("paleto_hack_pc_target_%s", data.pcId))
+		end
 	elseif id == "paleto_power" then
 		LocalPlayer.state:set("inPaletoPower", false, true)
 	end
@@ -413,18 +399,18 @@ end)
 AddEventHandler("Robbery:Client:Update:paleto", function()
 	if LocalPlayer.state.inPaletoBank then
 		local powerDisabled = IsPaletoPowerDisabled()
-		for k2, v2 in ipairs(_pbLasers) do
+		for k2, v2 in ipairs(_pb.lasers) do
 			exports['pulsar-lasers']:SetActive(string.format("paleto_lasers_%s", k2), not powerDisabled)
 			exports['pulsar-lasers']:SetVisible(string.format("paleto_lasers_%s", k2), not powerDisabled)
 		end
 	end
 end)
 
-AddEventHandler("Robbery:Client:Paleto:ElectricBox:Hack", function(entity, data)
+AddEventHandler("Robbery:Client:Paleto:ElectricBox:Hack", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:ElectricBox:Hack", data, function() end)
 end)
 
-AddEventHandler("Robbery:Client:Paleto:Upload", function(entity, data)
+AddEventHandler("Robbery:Client:Paleto:Upload", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:PC:Hack", data, function() end)
 end)
 
@@ -432,15 +418,15 @@ AddEventHandler("Robbery:Client:Paleto:Workstation", function(entity, data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:Workstation", data, function() end)
 end)
 
-AddEventHandler("Robbery:Client:Paleto:OfficeHack", function(entity, data)
+AddEventHandler("Robbery:Client:Paleto:OfficeHack", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:OfficeHack", data, function() end)
 end)
 
-AddEventHandler("Robbery:Client:Paleto:Drill", function(entity, data)
+AddEventHandler("Robbery:Client:Paleto:Drill", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:Drill", data.drillId, function() end)
 end)
 
-AddEventHandler("Robbery:Client:Paleto:Search", function(entity, data)
+AddEventHandler("Robbery:Client:Paleto:Search", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Paleto:Search", data, function() end)
 end)
 
@@ -593,7 +579,7 @@ end)
 RegisterNetEvent("Robbery:Client:Paleto:CheckLasers", function()
 	if LocalPlayer.state.inPaletoBank then
 		local powerDisabled = IsPaletoPowerDisabled()
-		for k2, v2 in ipairs(_pbLasers) do
+		for k2, v2 in ipairs(_pb.lasers) do
 			exports['pulsar-lasers']:SetActive(string.format("paleto_lasers_%s", k2), not powerDisabled)
 			exports['pulsar-lasers']:SetVisible(string.format("paleto_lasers_%s", k2), not powerDisabled)
 		end

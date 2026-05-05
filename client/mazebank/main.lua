@@ -1,17 +1,19 @@
+local _mb = RobberyConfig.mazebank
+
 function NeedsReset()
-	for k, v in ipairs(_mbDoors) do
+	for k, v in ipairs(_mb.doors) do
 		if not exports['ox_doorlock']:IsLocked(v.door) then
 			return true
 		end
 	end
 
-	for k, v in ipairs(_mbOfficeDoors) do
+	for k, v in ipairs(_mb.officeDoors) do
 		if not exports['ox_doorlock']:IsLocked(v.door) then
 			return true
 		end
 	end
 
-	for k, v in ipairs(_mbHacks) do
+	for k, v in ipairs(_mb.hacks) do
 		if
 			GlobalState[string.format("MazeBank:ManualDoor:%s", v.doorId)] ~= nil
 			and (
@@ -29,7 +31,7 @@ function NeedsReset()
 		end
 	end
 
-	for k, v in ipairs(_mbDrillPoints) do
+	for k, v in ipairs(_mb.drillPoints) do
 		if
 			GlobalState[string.format("MazeBank:Vault:Wall:%s", v.data.wallId)] ~= nil
 			and GlobalState[string.format("MazeBank:Vault:Wall:%s", v.data.wallId)] > GetCloudTimeAsInt()
@@ -38,7 +40,7 @@ function NeedsReset()
 		end
 	end
 
-	for k, v in ipairs(_mbDesks) do
+	for k, v in ipairs(_mb.desks) do
 		if
 			GlobalState[string.format("MazeBank:Offices:PC:%s", v.data.deskId)] ~= nil
 			and GlobalState[string.format("MazeBank:Offices:PC:%s", v.data.deskId)] > GetCloudTimeAsInt()
@@ -51,31 +53,16 @@ function NeedsReset()
 end
 
 AddEventHandler("Robbery:Client:Setup", function()
-	exports['pulsar-polyzone']:CreatePoly("bank_mazebank", {
-		vector2(-1305.3043212891, -832.20843505859),
-		vector2(-1313.142578125, -837.57971191406),
-		vector2(-1322.0520019531, -826.35705566406),
-		vector2(-1320.9718017578, -825.19079589844),
-		vector2(-1311.0677490234, -817.70617675781),
-		vector2(-1297.9323730469, -808.08953857422),
-		vector2(-1290.2984619141, -818.11029052734),
-		vector2(-1290.3094482422, -820.55517578125),
-		vector2(-1284.7360839844, -828.54858398438),
-		vector2(-1288.2290039062, -831.19177246094),
-		vector2(-1283.6013183594, -838.04913330078),
-		vector2(-1294.6595458984, -846.15374755859),
-	}, {
-		--debugPoly = true,
-	})
+	exports['pulsar-polyzone']:CreatePoly("bank_mazebank", _mb.polyZone.vertices, _mb.polyZone.options)
 
 	exports.ox_target:addBoxZone({
 		id = "mazebanK_secure",
-		coords = vector3(-1301.14, -826.27, 16.78),
-		size = vector3(1.4, 0.6, 2.0),
-		rotation = 37,
+		coords = _mb.secureZone.coords,
+		size = vector3(_mb.secureZone.length, _mb.secureZone.width, 2.0),
+		rotation = _mb.secureZone.options.heading,
 		debug = false,
-		minZ = 15.78,
-		maxZ = 17.38,
+		minZ = _mb.secureZone.options.minZ,
+		maxZ = _mb.secureZone.options.maxZ,
 		options = {
 			{
 				icon = "fas fa-lock",
@@ -87,7 +74,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		}
 	})
 
-	for k, v in ipairs(_mbElectric) do
+	for k, v in ipairs(_mb.electric) do
 		exports.ox_target:addBoxZone({
 			id = string.format("mazebank_power_%s", v.data.boxId),
 			coords = v.coords,
@@ -138,7 +125,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		})
 	end
 
-	for k, v in ipairs(_mbDrillPoints) do
+	for k, v in ipairs(_mb.drillPoints) do
 		exports.ox_target:addBoxZone({
 			id = string.format("mazebanK_drill_%s", v.data.wallId),
 			coords = v.coords,
@@ -169,7 +156,7 @@ AddEventHandler("Robbery:Client:Setup", function()
 		})
 	end
 
-	for k, v in ipairs(_mbDesks) do
+	for k, v in ipairs(_mb.desks) do
 		exports.ox_target:addBoxZone({
 			id = string.format("mazebanK_workstation_%s", v.data.deskId),
 			coords = v.coords,
@@ -243,20 +230,20 @@ AddEventHandler("Robbery:Client:MazeBank:StartSecuring", function(entity, data)
 	end)
 end)
 
-AddEventHandler("Robbery:Client:MazeBank:ElectricBox:Hack", function(entity, data)
+AddEventHandler("Robbery:Client:MazeBank:ElectricBox:Hack", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:ElectricBox:Hack", data, function() end)
 end)
 
-AddEventHandler("Robbery:Client:MazeBank:ElectricBox:Thermite", function(entity, data)
+AddEventHandler("Robbery:Client:MazeBank:ElectricBox:Thermite", function(data)
 	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:ElectricBox:Thermite", data, function() end)
 end)
 
-AddEventHandler("Robbery:Client:MazeBank:Drill", function(entity, data)
-	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:Drill", data.id, function() end)
+AddEventHandler("Robbery:Client:MazeBank:Drill", function(wallId)
+	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:Drill", wallId, function() end)
 end)
 
-AddEventHandler("Robbery:Client:MazeBank:PC:Hack", function(entity, data)
-	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:PC:Hack", data, function() end)
+AddEventHandler("Robbery:Client:MazeBank:PC:Hack", function(deskId)
+	exports["pulsar-core"]:ServerCallback("Robbery:MazeBank:PC:Hack", { id = deskId }, function() end)
 end)
 
 RegisterNetEvent("Robbery:Client:MazeBank:OpenVaultDoor", function(door)

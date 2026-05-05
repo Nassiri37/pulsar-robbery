@@ -1,10 +1,12 @@
+local _bct = RobberyConfig.moneytruck
+
 CreateThread(function()
     local spawned = false
     while true do
         spawned = false
 
         if #_moneyTruckSpawns == 0 then
-            _moneyTruckSpawns = table.copy(_spawnHoldingShit)
+            _moneyTruckSpawns = table.copy(_bct.spawnHolding)
         end
 
         if _truckSpawnEnabled then
@@ -12,7 +14,7 @@ CreateThread(function()
             if not spawned then
                 Wait(30000)
             else
-                Wait(BCT_SPAWN_RATE)
+                Wait(_bct.spawnRate)
             end
         else
             Wait(60000)
