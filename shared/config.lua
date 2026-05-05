@@ -570,119 +570,7 @@ RobberyConfig = {
         requiredPolice  = 0,
         resetTime       = 60 * 60 * 8,
 
-        doorIds = {
-            "pulsar_bank_savings_paleto_office_1",
-            "pulsar_bank_savings_paleto_office_2",
-            "pulsar_bank_savings_paleto_office_3",
-            "pulsar_bank_savings_paleto_corridor_1",
-            "pulsar_bank_savings_paleto_corridor_2",
-            "pulsar_bank_savings_paleto_security",
-            "pulsar_bank_savings_paleto_back_1",
-            "pulsar_bank_savings_paleto_back_2",
-            "pulsar_bank_savings_paleto_gate",
-            "pulsar_bank_savings_paleto_vault",
-        },
-
-        -- doors opened without a code during the heist sequence
-        doorsGarbage = {
-            { doorId = "pulsar_bank_savings_paleto_corridor_1", label = "Tellers",          requireCode = false, data = { id = 1, door = "pulsar_bank_savings_paleto_corridor_1" } },
-            { doorId = "pulsar_bank_savings_paleto_corridor_2", label = "Security Hallway", requireCode = false, data = { id = 2, door = "pulsar_bank_savings_paleto_corridor_2" } },
-            { doorId = "pulsar_bank_savings_paleto_office_1",   label = "Office #1",        requireCode = true,  data = { id = 3, officeId = 1, door = "pulsar_bank_savings_paleto_office_1" } },
-            { doorId = "pulsar_bank_savings_paleto_office_2",   label = "Office #2",        requireCode = true,  data = { id = 4, officeId = 2, door = "pulsar_bank_savings_paleto_office_2" } },
-            { doorId = "pulsar_bank_savings_paleto_office_3",   label = "Office #3",        requireCode = true,  data = { id = 5, officeId = 3, door = "pulsar_bank_savings_paleto_office_3" } },
-        },
-
-        subStations = {
-            { id = 1, thermite = { coords = vector3(2586.039, 5065.303, 45.04548), heading = 197.966 }, explosions = { vector3(2593.786, 5060.913, 45.546), vector3(2587.667, 5058.760, 45.743), vector3(2592.805, 5064.298, 45.285) } },
-            { id = 2, thermite = { coords = vector3(1353.959, 6386.733, 33.19492), heading = 90.234  }, explosions = { vector3(1349.453, 6380.395, 34.416), vector3(1349.467, 6387.196, 33.801), vector3(1341.865, 6386.671, 33.874), vector3(1341.857, 6380.379, 34.431) } },
-            { id = 3, thermite = { coords = vector3(-288.9897, 6027.154, 31.55255), heading = 133.697 }, explosions = { vector3(-293.155, 6021.172, 32.111), vector3(-289.357, 6017.341, 32.062), vector3(-287.331, 6021.060, 31.930), vector3(-290.942, 6024.837, 32.593) } },
-            { id = 4, thermite = { coords = vector3(239.3452, 6405.226, 31.8286), heading = 111.934  }, explosions = { vector3(235.663, 6403.994, 32.199), vector3(237.823, 6398.830, 32.178), vector3(233.731, 6396.820, 32.259), vector3(231.195, 6402.163, 32.031), vector3(228.429, 6399.177, 31.395), vector3(229.807, 6395.989, 31.771) } },
-        },
-
-        lockpickPoints = {
-            { coords = vector3(-111.549, 6468.489, 31.634), door = "" },
-        },
-
-        hackPoints = {
-            { coords = vector3(-102.342, 6463.234, 31.634), heading = 224.469, door = "pulsar_bank_savings_paleto_vault", requiredDoors = {} },
-        },
-
-        doorThermite = {
-            { coords = vector3(-97.33757, 6475.071, 31.50123), heading = 136.012, door = "pulsar_bank_savings_paleto_back_1", requiredDoors = {} },
-            { coords = vector3(-118.7633, 6477.372, 31.57678), heading = 221.941, door = "pulsar_bank_savings_paleto_back_2", requiredDoors = {}, requireExploit = false },
-        },
-
-        securityPower = {
-            { coords = vector3(-118.4007, 6470.696, 31.65586), heading = 137.899, powerId = 1, requiredDoors = { "pulsar_bank_savings_paleto_back_2" }, ptfx = { vector3(-118.3559, 6470.742, 32.59674), vector3(-118.112, 6470.457, 31.36404) } },
-            { coords = vector3(-92.64053, 6469.752, 31.7244),  heading = 319.835, powerId = 2, requiredDoors = { "pulsar_bank_savings_paleto_back_1" }, ptfx = { vector3(-92.68832, 6469.708, 32.62043), vector3(-92.9099, 6469.972, 31.36724)  } },
-        },
-
-        killZones = {
-            { coords = vector3(-104.65, 6460.56, 31.63), length = 4.8, width = 4.8, options = { heading = 315, minZ = 30.63, maxZ = 33.43 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_1" } },
-            { coords = vector3(-97.26, 6467.69, 31.63), length = 4.8, width = 4.8, options = { heading = 315, minZ = 30.63, maxZ = 33.23 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_2" } },
-            { coords = vector3(-105.54, 6477.56, 31.63), length = 6.0, width = 4.8, options = { heading = 45,  minZ = 30.63, maxZ = 33.43 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_3" } },
-            { coords = vector3(-98.41, 6461.68, 31.63), length = 4.65,width = 5.4, options = { heading = 315, minZ = 30.63, maxZ = 33.63 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_vault"    } },
-            { coords = vector3(-93.12, 6465.23, 31.63), length = 7.0, width = 3.6, options = { heading = 315, minZ = 30.63, maxZ = 33.23 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_security"  } },
-        },
-
-        pcHackAreas = {
-            { coords = vector3(-179.37, 6148.54, 42.64), length = 10.2, width = 21.2, options = { heading = 315, minZ = 41.64, maxZ = 47.64 }, data = { pcId = 1 }, target = { coords = vector3(-179.37, 6148.54, 42.64), length = 1.2, width = 1.2, options = { heading = 315, minZ = 41.64, maxZ = 44.64 } } },
-            { coords = vector3(432.57, 6465.72, 35.78),  length = 27.1, width = 8.4,  options = { heading = 230, minZ = 34.78, maxZ = 38.78 }, data = { pcId = 2 }, target = { coords = vector3(432.57,  6465.72, 35.78),  length = 1.2, width = 1.2, options = { heading = 230, minZ = 34.78, maxZ = 37.78 } } },
-            { coords = vector3(-2174.1, 4290.36, 49.05), length = 9.6,  width = 7.6,  options = { heading = 326, minZ = 48.05, maxZ = 50.45 }, data = { pcId = 3 }, target = { coords = vector3(-2174.1, 4290.36, 49.05), length = 1.2, width = 1.2, options = { heading = 326, minZ = 48.05, maxZ = 51.05 } } },
-            { coords = vector3(3616.07, 5024.11, 11.45), length = 7.6,  width = 9.0,  options = { heading = 290, minZ = 10.45, maxZ = 13.65 }, data = { pcId = 4 }, target = { coords = vector3(3616.07, 5024.11, 11.45), length = 1.2, width = 1.2, options = { heading = 290, minZ = 10.45, maxZ = 13.45 } } },
-        },
-
-        subStationZones = {
-            { coords = vector3(2589.08, 5060.17, 44.92), length = 20.4, width = 21.2, options = { heading = 16,  minZ = 43.92, maxZ = 51.52 }, data = { subStationId = 1 } },
-            { coords = vector3(1346.19, 6383.21, 33.41), length = 34.6, width = 25.2, options = { heading = 0,   minZ = 32.41, maxZ = 39.21 }, data = { subStationId = 2 } },
-            { coords = vector3(-288.54, 6019.09, 31.55), length = 20.2, width = 14.6, options = { heading = 45,  minZ = 30.55, maxZ = 35.55 }, data = { subStationId = 3 } },
-            { coords = vector3(234.31, 6402.54, 31.65), length = 19.8, width = 27.6, options = { heading = 26,  minZ = 30.65, maxZ = 35.45 }, data = { subStationId = 4 } },
-        },
-
-        powerHacks = {
-            { coords = vector3(-442.17, 5602.08, 68.38), length = 0.6, width = 1.0, options = { heading = 4,   minZ = 67.98, maxZ = 69.78 }, data = { boxId = 1, ptFxPoint = vector3(-442.168, 5601.922, 68.80035) } },
-            { coords = vector3(8.99, 6221.59, 31.47), length = 0.4, width = 0.8, options = { heading = 28,  minZ = 30.87, maxZ = 32.67 }, data = { boxId = 2, ptFxPoint = vector3(8.950461, 6221.659, 31.73336) } },
-            { coords = vector3(2872.15, 4869.36, 62.29), length = 1.0, width = 0.6, options = { heading = 31,  minZ = 62.09, maxZ = 63.69 }, data = { boxId = 3, ptFxPoint = vector3(2872.163, 4869.374, 62.93316) } },
-            { coords = vector3(-83.59, 6131.98, 30.46), length = 1.2, width = 0.6, options = { heading = 319, minZ = 30.26, maxZ = 32.26 }, data = { boxId = 4, ptFxPoint = vector3(-83.68681, 6132,     31.04742) } },
-        },
-
-        doorHacks = {
-            { coords = vector3(-97.26, 6475.09, 31.3),  length = 0.6, width = 0.4, options = { heading = 46,  minZ = 30.7,  maxZ = 32.5  } },
-            { coords = vector3(-118.76, 6477.38, 31.57), length = 1.0, width = 0.6, options = { heading = 317, minZ = 30.37, maxZ = 32.77 } },
-        },
-
-        lasers = {
-            { origins = vec3(-101.190002, 6467.169922, 33.935001), targets = { vec3(-101.503998, 6463.251953, 30.646000), vec3(-100.108002, 6464.666016, 30.634001), vec3(-104.019997, 6464.421875, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto1" } },
-            { origins = vec3(-104.024002, 6464.348145, 33.953999), targets = { vec3(-100.125999, 6464.629883, 30.643999), vec3(-101.486000, 6463.270020, 30.635000), vec3(-101.257004, 6467.187012, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto2" } },
-            { origins = vec3(-102.140999, 6462.520996, 33.980000), targets = { vec3(-103.057999, 6465.428223, 30.634001), vec3(-102.267998, 6466.155762, 30.634001), vec3(-99.417999, 6465.327148, 30.634001), vec3(-102.188004, 6462.559082, 30.634001), vec3(-104.000999, 6464.437988, 30.634001), vec3(-101.267998, 6467.199219, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto3" } },
-            { origins = vec3(-99.348999, 6465.328125, 34.018002),  targets = { vec3(-102.271004, 6466.204102, 30.634001), vec3(-103.042999, 6465.412109, 30.634001), vec3(-102.177002, 6462.564941, 30.634001), vec3(-101.299004, 6467.194824, 30.634001), vec3(-99.428001, 6465.315918, 30.634001), vec3(-101.489998, 6463.266113, 30.635000), vec3(-100.100998, 6464.654785, 30.643999) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto4" } },
-        },
-
-        officeHacks = {
-            { coords = vector3(-103.82, 6460.55, 31.63), length = 1.4, width = 0.8, options = { heading = 314, minZ = 30.63, maxZ = 32.63 }, data = { door = "pulsar_bank_savings_paleto_office_1", officeId = 1 } },
-            { coords = vector3(-98.16, 6466.24, 31.63), length = 1.4, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.43 }, data = { door = "pulsar_bank_savings_paleto_office_2", officeId = 2 } },
-            { coords = vector3(-104.85, 6479.08, 31.63), length = 1.4, width = 0.8, options = { heading = 317, minZ = 28.43, maxZ = 32.43 }, data = { door = "pulsar_bank_savings_paleto_office_3", officeId = 3 } },
-        },
-
-        officeSearch = {
-            { coords = vector3(-103.98, 6458.19, 31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_1", searchId = 1 } },
-            { coords = vector3(-106.94, 6460.9,  31.63), length = 1.8, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_1", searchId = 2 } },
-            { coords = vector3(-94.96, 6467.06, 31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_2", searchId = 3 } },
-            { coords = vector3(-97.89, 6470.08, 31.63), length = 1.8, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_2", searchId = 4 } },
-            { coords = vector3(-108.29, 6478.6,  31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_3", searchId = 5 } },
-            { coords = vector3(-102.78, 6476.56, 31.63), length = 2.4, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_3", searchId = 6 } },
-        },
-
-        drillPoints = {
-            { coords = vector3(-97.61, 6464.32, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 1 } },
-            { coords = vector3(-95.85, 6462.88, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 2 } },
-            { coords = vector3(-95.7, 6460.14, 31.63), length = 0.6, width = 1.2, options = { heading = 45,  minZ = 30.83, maxZ = 33.23 }, data = { drillId = 3 } },
-            { coords = vector3(-97.03, 6458.83, 31.63), length = 0.6, width = 1.2, options = { heading = 45,  minZ = 30.83, maxZ = 33.23 }, data = { drillId = 4 } },
-            { coords = vector3(-99.41, 6458.79, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 5 } },
-            { coords = vector3(-100.33, 6459.83, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 6 } },
-            { coords = vector3(-101.47, 6461.05, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 7 } },
-        },
-
+        -- boundary / always-active (not robbery steps, referenced by the system)
         polyZone = {
             vector2(-129.5386505127, 6470.3793945312),
             vector2(-103.76642608643, 6444.1923828125),
@@ -696,32 +584,168 @@ RobberyConfig = {
             options = { useZ = false },
         },
 
+        -- kill zones: active while their respective door is locked; player is tp'd out if entered
+        killZones = {
+            { coords = vector3(-104.65, 6460.56, 31.63), length = 4.8, width = 4.8, options = { heading = 315, minZ = 30.63, maxZ = 33.43 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_1" } },
+            { coords = vector3(-97.26, 6467.69, 31.63), length = 4.8, width = 4.8, options = { heading = 315, minZ = 30.63, maxZ = 33.23 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_2" } },
+            { coords = vector3(-105.54, 6477.56, 31.63), length = 6.0, width = 4.8, options = { heading = 45,  minZ = 30.63, maxZ = 33.43 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_office_3" } },
+            { coords = vector3(-98.41, 6461.68, 31.63), length = 4.65,width = 5.4, options = { heading = 315, minZ = 30.63, maxZ = 33.63 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_vault"    } },
+            { coords = vector3(-93.12, 6465.23, 31.63), length = 7.0, width = 3.6, options = { heading = 315, minZ = 30.63, maxZ = 33.23 }, data = { isDeath = true, tpCoords = vector3(-113.465, 6460.281, 31.468), door = "pulsar_bank_savings_paleto_security"  } },
+        },
+
+        -- all door IDs managed by the heist (used for reset checks)
+        doorIds = {
+            "pulsar_bank_savings_paleto_office_1",
+            "pulsar_bank_savings_paleto_office_2",
+            "pulsar_bank_savings_paleto_office_3",
+            "pulsar_bank_savings_paleto_corridor_1",
+            "pulsar_bank_savings_paleto_corridor_2",
+            "pulsar_bank_savings_paleto_security",
+            "pulsar_bank_savings_paleto_back_1",
+            "pulsar_bank_savings_paleto_back_2",
+            "pulsar_bank_savings_paleto_gate",
+            "pulsar_bank_savings_paleto_vault",
+        },
+
+        -- doors the security panel unlocks; requireCode=true means players need an access code
+        doorsGarbage = {
+            { doorId = "pulsar_bank_savings_paleto_corridor_1", label = "Tellers",          requireCode = false, data = { id = 1, door = "pulsar_bank_savings_paleto_corridor_1" } },
+            { doorId = "pulsar_bank_savings_paleto_corridor_2", label = "Security Hallway", requireCode = false, data = { id = 2, door = "pulsar_bank_savings_paleto_corridor_2" } },
+            { doorId = "pulsar_bank_savings_paleto_office_1",   label = "Office #1",        requireCode = true,  data = { id = 3, officeId = 1, door = "pulsar_bank_savings_paleto_office_1" } },
+            { doorId = "pulsar_bank_savings_paleto_office_2",   label = "Office #2",        requireCode = true,  data = { id = 4, officeId = 2, door = "pulsar_bank_savings_paleto_office_2" } },
+            { doorId = "pulsar_bank_savings_paleto_office_3",   label = "Office #3",        requireCode = true,  data = { id = 5, officeId = 3, door = "pulsar_bank_savings_paleto_office_3" } },
+        },
+
+        -- STEP 1: hack all 4 remote PCs to install the exploit (adv_electronics_kit)
+        --  each entry is a large polyzone the player walks into; the target sub-table is
+        --  the precise ox_target box that appears inside it for the "Upload Exploit" interaction
+        pcHackAreas = {
+            { coords = vector3(-179.37, 6148.54, 42.64), length = 10.2, width = 21.2, options = { heading = 315, minZ = 41.64, maxZ = 47.64 }, data = { pcId = 1 }, target = { coords = vector3(-179.37, 6148.54, 42.64), length = 1.2, width = 1.2, options = { heading = 315, minZ = 41.64, maxZ = 44.64 } } },
+            { coords = vector3(432.57, 6465.72, 35.78),  length = 27.1, width = 8.4,  options = { heading = 230, minZ = 34.78, maxZ = 38.78 }, data = { pcId = 2 }, target = { coords = vector3(432.57,  6465.72, 35.78),  length = 1.2, width = 1.2, options = { heading = 230, minZ = 34.78, maxZ = 37.78 } } },
+            { coords = vector3(-2174.1, 4290.36, 49.05), length = 9.6,  width = 7.6,  options = { heading = 326, minZ = 48.05, maxZ = 50.45 }, data = { pcId = 3 }, target = { coords = vector3(-2174.1, 4290.36, 49.05), length = 1.2, width = 1.2, options = { heading = 326, minZ = 48.05, maxZ = 51.05 } } },
+            { coords = vector3(3616.07, 5024.11, 11.45), length = 7.6,  width = 9.0,  options = { heading = 290, minZ = 10.45, maxZ = 13.65 }, data = { pcId = 4 }, target = { coords = vector3(3616.07, 5024.11, 11.45), length = 1.2, width = 1.2, options = { heading = 290, minZ = 10.45, maxZ = 13.45 } } },
+        },
+
+        -- STEP 2: breach the workstation inside the bank (adv_electronics_kit + vpn, all 4 exploits required)
+        -- hackAccessBox is the polyzone that sets inPaletoWSPoint; workstation is inside targets below
         hackAccessBox = {
             coords  = vector3(-107.04, 6474.16, 31.63),
             length  = 1.8, width = 1.2,
             options = { heading = 315, minZ = 30.63, maxZ = 32.63 },
         },
 
+        -- STEP 3: destroy remote substations with thermite to begin cutting power
+        --  subStations = thermite placement + explosion points for each substation
+        --  subStationZones = player detection polyzones around each substation
+        subStations = {
+            { id = 1, thermite = { coords = vector3(2586.039, 5065.303, 45.04548), heading = 197.966 }, explosions = { vector3(2593.786, 5060.913, 45.546), vector3(2587.667, 5058.760, 45.743), vector3(2592.805, 5064.298, 45.285) } },
+            { id = 2, thermite = { coords = vector3(1353.959, 6386.733, 33.19492), heading = 90.234  }, explosions = { vector3(1349.453, 6380.395, 34.416), vector3(1349.467, 6387.196, 33.801), vector3(1341.865, 6386.671, 33.874), vector3(1341.857, 6380.379, 34.431) } },
+            { id = 3, thermite = { coords = vector3(-288.9897, 6027.154, 31.55255), heading = 133.697 }, explosions = { vector3(-293.155, 6021.172, 32.111), vector3(-289.357, 6017.341, 32.062), vector3(-287.331, 6021.060, 31.930), vector3(-290.942, 6024.837, 32.593) } },
+            { id = 4, thermite = { coords = vector3(239.3452, 6405.226, 31.8286), heading = 111.934  }, explosions = { vector3(235.663, 6403.994, 32.199), vector3(237.823, 6398.830, 32.178), vector3(233.731, 6396.820, 32.259), vector3(231.195, 6402.163, 32.031), vector3(228.429, 6399.177, 31.395), vector3(229.807, 6395.989, 31.771) } },
+        },
+
+        subStationZones = {
+            { coords = vector3(2589.08, 5060.17, 44.92), length = 20.4, width = 21.2, options = { heading = 16,  minZ = 43.92, maxZ = 51.52 }, data = { subStationId = 1 } },
+            { coords = vector3(1346.19, 6383.21, 33.41), length = 34.6, width = 25.2, options = { heading = 0,   minZ = 32.41, maxZ = 39.21 }, data = { subStationId = 2 } },
+            { coords = vector3(-288.54, 6019.09, 31.55), length = 20.2, width = 14.6, options = { heading = 45,  minZ = 30.55, maxZ = 35.55 }, data = { subStationId = 3 } },
+            { coords = vector3(234.31, 6402.54, 31.65), length = 19.8, width = 27.6, options = { heading = 26,  minZ = 30.65, maxZ = 35.45 }, data = { subStationId = 4 } },
+        },
+
+        -- STEP 4: hack the 4 power interface boxes around the map (adv_electronics_kit)
+        -- completing all substations + all boxes triggers IsPaletoPowerDisabled() = lasers off
+        powerHacks = {
+            { coords = vector3(-442.17, 5602.08, 68.38), length = 0.6, width = 1.0, options = { heading = 4,   minZ = 67.98, maxZ = 69.78 }, data = { boxId = 1, ptFxPoint = vector3(-442.168, 5601.922, 68.80035) } },
+            { coords = vector3(8.99, 6221.59, 31.47), length = 0.4, width = 0.8, options = { heading = 28,  minZ = 30.87, maxZ = 32.67 }, data = { boxId = 2, ptFxPoint = vector3(8.950461, 6221.659, 31.73336) } },
+            { coords = vector3(2872.15, 4869.36, 62.29), length = 1.0, width = 0.6, options = { heading = 31,  minZ = 62.09, maxZ = 63.69 }, data = { boxId = 3, ptFxPoint = vector3(2872.163, 4869.374, 62.93316) } },
+            { coords = vector3(-83.59, 6131.98, 30.46), length = 1.2, width = 0.6, options = { heading = 319, minZ = 30.26, maxZ = 32.26 }, data = { boxId = 4, ptFxPoint = vector3(-83.68681, 6132,     31.04742) } },
+        },
+
+        -- STEP 5: breach the back of the bank
+        --   thermite the two back doors, then use door hacks / lockpick / security power to get inside
+        doorThermite = {
+            { coords = vector3(-97.33757, 6475.071, 31.50123), heading = 136.012, door = "pulsar_bank_savings_paleto_back_1", requiredDoors = {} },
+            { coords = vector3(-118.7633, 6477.372, 31.57678), heading = 221.941, door = "pulsar_bank_savings_paleto_back_2", requiredDoors = {}, requireExploit = false },
+        },
+
+        lockpickPoints = {
+            { coords = vector3(-111.549, 6468.489, 31.634), door = "" },
+        },
+
+        hackPoints = {
+            { coords = vector3(-102.342, 6463.234, 31.634), heading = 224.469, door = "pulsar_bank_savings_paleto_vault", requiredDoors = {} },
+        },
+
+        doorHacks = {
+            { coords = vector3(-97.26, 6475.09, 31.3),  length = 0.6, width = 0.4, options = { heading = 46,  minZ = 30.7,  maxZ = 32.5  } },
+            { coords = vector3(-118.76, 6477.38, 31.57), length = 1.0, width = 0.6, options = { heading = 317, minZ = 30.37, maxZ = 32.77 } },
+        },
+
+        securityPower = {
+            { coords = vector3(-118.4007, 6470.696, 31.65586), heading = 137.899, powerId = 1, requiredDoors = { "pulsar_bank_savings_paleto_back_2" }, ptfx = { vector3(-118.3559, 6470.742, 32.59674), vector3(-118.112, 6470.457, 31.36404) } },
+            { coords = vector3(-92.64053, 6469.752, 31.7244),  heading = 319.835, powerId = 2, requiredDoors = { "pulsar_bank_savings_paleto_back_1" }, ptfx = { vector3(-92.68832, 6469.708, 32.62043), vector3(-92.9099, 6469.972, 31.36724)  } },
+        },
+
+        -- lasers inside the vault corridor; active until power is disabled (IsPaletoPowerDisabled)
+        lasers = {
+            { origins = vec3(-101.190002, 6467.169922, 33.935001), targets = { vec3(-101.503998, 6463.251953, 30.646000), vec3(-100.108002, 6464.666016, 30.634001), vec3(-104.019997, 6464.421875, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto1" } },
+            { origins = vec3(-104.024002, 6464.348145, 33.953999), targets = { vec3(-100.125999, 6464.629883, 30.643999), vec3(-101.486000, 6463.270020, 30.635000), vec3(-101.257004, 6467.187012, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto2" } },
+            { origins = vec3(-102.140999, 6462.520996, 33.980000), targets = { vec3(-103.057999, 6465.428223, 30.634001), vec3(-102.267998, 6466.155762, 30.634001), vec3(-99.417999, 6465.327148, 30.634001), vec3(-102.188004, 6462.559082, 30.634001), vec3(-104.000999, 6464.437988, 30.634001), vec3(-101.267998, 6467.199219, 30.634001) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto3" } },
+            { origins = vec3(-99.348999, 6465.328125, 34.018002),  targets = { vec3(-102.271004, 6466.204102, 30.634001), vec3(-103.042999, 6465.412109, 30.634001), vec3(-102.177002, 6462.564941, 30.634001), vec3(-101.299004, 6467.194824, 30.634001), vec3(-99.428001, 6465.315918, 30.634001), vec3(-101.489998, 6463.266113, 30.635000), vec3(-100.100998, 6464.654785, 30.643999) }, options = { travelTimeBetweenTargets = { 1.0, 1.0 }, waitTimeAtTargets = { 0.0, 0.0 }, randomTargetSelection = true, name = "paleto4" } },
+        },
+
+        -- STEP 6: office hacks — upload exploit to each office computer to unlock its door (adv_electronics_kit + vpn)
+        officeHacks = {
+            { coords = vector3(-103.82, 6460.55, 31.63), length = 1.4, width = 0.8, options = { heading = 314, minZ = 30.63, maxZ = 32.63 }, data = { door = "pulsar_bank_savings_paleto_office_1", officeId = 1 } },
+            { coords = vector3(-98.16, 6466.24, 31.63), length = 1.4, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.43 }, data = { door = "pulsar_bank_savings_paleto_office_2", officeId = 2 } },
+            { coords = vector3(-104.85, 6479.08, 31.63), length = 1.4, width = 0.8, options = { heading = 317, minZ = 28.43, maxZ = 32.43 }, data = { door = "pulsar_bank_savings_paleto_office_3", officeId = 3 } },
+        },
+
+        -- STEP 6 (continued): search desks inside each office once its door is unlocked
+        officeSearch = {
+            { coords = vector3(-103.98, 6458.19, 31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_1", searchId = 1 } },
+            { coords = vector3(-106.94, 6460.9,  31.63), length = 1.8, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_1", searchId = 2 } },
+            { coords = vector3(-94.96, 6467.06, 31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_2", searchId = 3 } },
+            { coords = vector3(-97.89, 6470.08, 31.63), length = 1.8, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_2", searchId = 4 } },
+            { coords = vector3(-108.29, 6478.6,  31.63), length = 2.2, width = 0.8, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_3", searchId = 5 } },
+            { coords = vector3(-102.78, 6476.56, 31.63), length = 2.4, width = 0.6, options = { heading = 315, minZ = 30.63, maxZ = 32.23 }, data = { door = "pulsar_bank_savings_paleto_office_3", searchId = 6 } },
+        },
+
+        -- STEP 7: drill the vault door (requires exploit installed + vault door unlocked)
+        drillPoints = {
+            { coords = vector3(-97.61, 6464.32, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 1 } },
+            { coords = vector3(-95.85, 6462.88, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 2 } },
+            { coords = vector3(-95.7, 6460.14, 31.63), length = 0.6, width = 1.2, options = { heading = 45,  minZ = 30.83, maxZ = 33.23 }, data = { drillId = 3 } },
+            { coords = vector3(-97.03, 6458.83, 31.63), length = 0.6, width = 1.2, options = { heading = 45,  minZ = 30.83, maxZ = 33.23 }, data = { drillId = 4 } },
+            { coords = vector3(-99.41, 6458.79, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 5 } },
+            { coords = vector3(-100.33, 6459.83, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 6 } },
+            { coords = vector3(-101.47, 6461.05, 31.63), length = 0.6, width = 1.2, options = { heading = 315, minZ = 30.83, maxZ = 33.23 }, data = { drillId = 7 } },
+        },
+
+        -- ox_target interaction zones (step labels in comments)
         targets = {
-            secure = {
-                coords  = vector3(-109.57, 6461.51, 31.64),
-                length  = 0.6, width = 0.4,
-                options = { heading = 315, minZ = 31.24, maxZ = 32.84 },
-            },
-            security = {
-                coords  = vector3(-91.76, 6464.78, 31.63),
-                length  = 1.4, width = 0.8,
-                options = { heading = 315, minZ = 30.63, maxZ = 32.43 },
-            },
+            -- step 2: breach network terminal (adv_electronics_kit + vpn, requires all 4 exploits)
             workstation = {
                 coords  = vector3(-106.12, 6473.87, 31.63),
                 length  = 1.2, width = 0.6,
                 options = { heading = 315, minZ = 31.03, maxZ = 32.43 },
             },
+            -- step 5: security panel — controls internal doors (requires exploit + gate unlocked)
+            security = {
+                coords  = vector3(-91.76, 6464.78, 31.63),
+                length  = 1.4, width = 0.8,
+                options = { heading = 315, minZ = 30.63, maxZ = 32.43 },
+            },
+            -- step 6: office #3 safe — crack safe (paleto_access_codes item, requires office 3 door)
             officeSafe = {
                 coords  = vector3(-105.27, 6480.67, 31.63),
                 length  = 0.8, width = 0.6,
                 options = { heading = 45, minZ = 31.43, maxZ = 32.83 },
+            },
+            -- police only: secure the bank after a robbery
+            secure = {
+                coords  = vector3(-109.57, 6461.51, 31.64),
+                length  = 0.6, width = 0.4,
+                options = { heading = 315, minZ = 31.24, maxZ = 32.84 },
             },
         },
     },
