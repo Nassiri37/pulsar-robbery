@@ -39,49 +39,12 @@ RobberyConfig = {
             },
         },
 
-        -- each entry: { weight, { name, min, max [, metadata] } }
-        -- weights are relative — higher = more common
-        loot = {
-            trolley = {
-                cash = {
-                    { 60, { name = "moneyroll",  min = 200, max = 250 } },
-                    { 33, { name = "moneyband",  min = 22,  max = 28  } },
-                    { 5,  { name = "valuegoods", min = 14,  max = 20  } },
-                    { 2,  { name = "moneybag",   min = 1,   max = 1,  metadata = { CustomAmt = { Min = 15000, Random = 5000 } } } },
-                },
-                gold = {
-                    { 85, { name = "goldbar",  min = 50, max = 70 } },
-                    { 15, { name = "moneybag", min = 1,  max = 1,  metadata = { CustomAmt = { Min = 40000, Random = 10000 } } } },
-                },
-                gems = {
-                    { 20, { name = "opal",     min = 1, max = 1 } },
-                    { 20, { name = "citrine",  min = 1, max = 1 } },
-                    { 20, { name = "amethyst", min = 1, max = 1 } },
-                    { 15, { name = "ruby",     min = 1, max = 1 } },
-                    { 15, { name = "sapphire", min = 1, max = 1 } },
-                    { 5,  { name = "emerald",  min = 1, max = 1 } },
-                    { 5,  { name = "diamond",  min = 1, max = 1 } },
-                },
-            },
-        },
-        -- hash = full trolley prop, empty = after looting, hand = prop held during loot anim
-        trolleyTypes = {
-            { hash = `hei_prop_hei_cash_trolly_01`,   empty = `hei_prop_hei_cash_trolly_03`,    hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_cash_low_trolly_01a`,   empty = `mythic_prop_diamond_empty`,       hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_cash_low_trolly_01b`,   empty = `mythic_prop_diamond_emptyb`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_cash_low_trolly_01c`,   empty = `mythic_prop_diamond_emptyc`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_ch_cash_trolly_01a`,    empty = `mythic_prop_diamond_empty`,       hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_ch_cash_trolly_01b`,    empty = `mythic_prop_diamond_emptyb`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_ch_cash_trolly_01c`,    empty = `mythic_prop_diamond_emptyc`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
-            { hash = `ch_prop_gold_trolly_01a`,       empty = `mythic_prop_diamond_empty`,       hand = `ch_prop_gold_bar_01a`,      type = "gold" },
-            { hash = `ch_prop_gold_trolly_01b`,       empty = `mythic_prop_diamond_emptyb`,      hand = `ch_prop_gold_bar_01a`,      type = "gold" },
-            { hash = `ch_prop_gold_trolly_01c`,       empty = `mythic_prop_diamond_emptyc`,      hand = `ch_prop_gold_bar_01a`,      type = "gold" },
-            -- gems trolleys (disabled until gem loot is tuned):
-            -- { hash = `ch_prop_diamond_trolly_01a`, empty = `mythic_prop_diamond_empty`,    hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
-            -- { hash = `ch_prop_diamond_trolly_01b`, empty = `mythic_prop_diamond_emptyb`,   hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
-            -- { hash = `ch_prop_diamond_trolly_01c`, empty = `mythic_prop_diamond_emptyc`,   hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
-        },
-
+        -- STEP 1: enter the bank zone (outer polyzone; each location's coords/width/length)
+        -- STEP 2: use laptop at points.laptopLoc to hack the vault door (green_laptop)
+        -- STEP 3: wait for the time-lock countdown (~2–4 min)
+        -- STEP 4: place thermite at points.thermiteLoc to blow the vault gate
+        -- STEP 5: drill the safe zones inside the vault (loots targets)
+        -- (police): secure the bank to auto-reset it
         locations = {
             fleeca_hawick_east = { -- key
                 id     = "fleeca_hawick_east", -- id mirrors the key
@@ -205,6 +168,49 @@ RobberyConfig = {
                 },
             },
         },
+
+        -- loot tables (drawn when a trolley is looted in Step 5)
+        -- each entry: { weight, { name, min, max [, metadata] } }; weights are relative — higher = more common
+        loot = {
+            trolley = {
+                cash = {
+                    { 60, { name = "moneyroll",  min = 200, max = 250 } },
+                    { 33, { name = "moneyband",  min = 22,  max = 28  } },
+                    { 5,  { name = "valuegoods", min = 14,  max = 20  } },
+                    { 2,  { name = "moneybag",   min = 1,   max = 1,  metadata = { CustomAmt = { Min = 15000, Random = 5000 } } } },
+                },
+                gold = {
+                    { 85, { name = "goldbar",  min = 50, max = 70 } },
+                    { 15, { name = "moneybag", min = 1,  max = 1,  metadata = { CustomAmt = { Min = 40000, Random = 10000 } } } },
+                },
+                gems = {
+                    { 20, { name = "opal",     min = 1, max = 1 } },
+                    { 20, { name = "citrine",  min = 1, max = 1 } },
+                    { 20, { name = "amethyst", min = 1, max = 1 } },
+                    { 15, { name = "ruby",     min = 1, max = 1 } },
+                    { 15, { name = "sapphire", min = 1, max = 1 } },
+                    { 5,  { name = "emerald",  min = 1, max = 1 } },
+                    { 5,  { name = "diamond",  min = 1, max = 1 } },
+                },
+            },
+        },
+        -- hash = full trolley prop, empty = after looting, hand = prop held during loot anim
+        trolleyTypes = {
+            { hash = `hei_prop_hei_cash_trolly_01`,   empty = `hei_prop_hei_cash_trolly_03`,    hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_cash_low_trolly_01a`,   empty = `mythic_prop_diamond_empty`,       hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_cash_low_trolly_01b`,   empty = `mythic_prop_diamond_emptyb`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_cash_low_trolly_01c`,   empty = `mythic_prop_diamond_emptyc`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_ch_cash_trolly_01a`,    empty = `mythic_prop_diamond_empty`,       hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_ch_cash_trolly_01b`,    empty = `mythic_prop_diamond_emptyb`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_ch_cash_trolly_01c`,    empty = `mythic_prop_diamond_emptyc`,      hand = `hei_prop_heist_cash_pile`,  type = "cash" },
+            { hash = `ch_prop_gold_trolly_01a`,       empty = `mythic_prop_diamond_empty`,       hand = `ch_prop_gold_bar_01a`,      type = "gold" },
+            { hash = `ch_prop_gold_trolly_01b`,       empty = `mythic_prop_diamond_emptyb`,      hand = `ch_prop_gold_bar_01a`,      type = "gold" },
+            { hash = `ch_prop_gold_trolly_01c`,       empty = `mythic_prop_diamond_emptyc`,      hand = `ch_prop_gold_bar_01a`,      type = "gold" },
+            -- gems trolleys (disabled until gem loot is tuned):
+            -- { hash = `ch_prop_diamond_trolly_01a`, empty = `mythic_prop_diamond_empty`,    hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
+            -- { hash = `ch_prop_diamond_trolly_01b`, empty = `mythic_prop_diamond_emptyb`,   hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
+            -- { hash = `ch_prop_diamond_trolly_01c`, empty = `mythic_prop_diamond_emptyc`,   hand = `ch_prop_vault_dimaondbox_01a`, type = "gems" },
+        },
     },
 
     -- BOBCAT
@@ -212,6 +218,83 @@ RobberyConfig = {
         serverStartWait = 1000 * 60 * math.random(60, 120),
         requiredPolice  = 4,
         resetTime       = 60 * 60 * 8, -- seconds until the heist resets
+
+        -- STEP 1: thermite exterior door / STEP 2: thermite front door
+        -- STEP 3: hack secured door (blue_laptop at frontPCHack) / STEP 5: breach vault door
+        locations = {
+            extrDoor    = { coords = vector3(882.174, -2258.287, 30.541),    heading = 178.102 }, -- Step 1
+            startDoor   = { coords = vector3(880.3293, -2264.466, 30.59444), heading = 178.102 }, -- Step 2
+            securedDoor = { coords = vector3(882.976, -2268.013, 30.468) },                       -- Step 3 (unlocked via frontPCHack)
+            vaultDoor   = { coords = vector3(890.41, -2285.601, 30.467),     heading = 93.374 },  -- Step 5
+        },
+
+        -- ox_target interaction zones for key actions
+        targets = {
+            -- Step 3: hack the front PC to bypass the secured door (blue_laptop)
+            frontPCHack = {
+                coords  = vector3(875.15, -2263.83, 30.47),
+                length  = 0.8, width = 1.2,
+                options = { heading = 354, minZ = 28.92, maxZ = 31.32 },
+            },
+            -- Step 4: collect C4 charges to breach the vault
+            c4 = {
+                coords  = vector3(873.44, -2294.37, 30.47),
+                length  = 1.4, width = 1.4,
+                options = { heading = 355, minZ = 29.47, maxZ = 31.67 },
+            },
+            -- Step 5: disable vault security system before looting
+            securityHack = {
+                coords  = vector3(887.07, -2299.13, 30.47),
+                length  = 3.0, width = 1.0,
+                options = { heading = 264, minZ = 29.47, maxZ = 31.27 },
+            },
+            -- (police): secure the facility to end the heist
+            secure = {
+                coords  = vector3(876.94, -2262.69, 30.47),
+                length  = 0.8, width = 1.4,
+                options = { heading = 356, minZ = 29.87, maxZ = 31.47 },
+            },
+        },
+
+        -- STEP 6: loot crates inside the vault; data.type maps to a key in loot
+        lootZones = {
+            { coords = vector3(881.8,  -2282.79, 30.47), width = 2.0,  length = 1.4, options = { heading = 333, minZ = 29.47, maxZ = 31.67 }, data = { id = 1, type = "guns-c2",   amount = 2, bonus = 8  } },
+            { coords = vector3(882.55, -2285.82, 30.47), width = 1.15, length = 1.8, options = { heading = 341, minZ = 29.47, maxZ = 31.27 }, data = { id = 2, type = "guns-c2",   amount = 2, bonus = 8  } },
+            { coords = vector3(886.63, -2286.84, 30.59), width = 1.4,  length = 2.0, options = { heading = 0,   minZ = 29.59, maxZ = 30.99 }, data = { id = 3, type = "guns",      amount = 3, bonus = 15 } },
+            { coords = vector3(887.01, -2282.06, 30.47), width = 1.2,  length = 2.2, options = { heading = 354, minZ = 29.47, maxZ = 31.27 }, data = { id = 4, type = "components", amount = 4, bonus = 10 } },
+        },
+
+        pedLocations = {
+            vector4(883.967, -2276.069, 30.468, 46.108),  vector4(887.204, -2275.289, 30.468, 78.713),
+            vector4(887.706, -2276.708, 30.468, 70.493),  vector4(890.998, -2276.155, 30.468, 76.662),
+            vector4(891.644, -2278.115, 30.468, 61.522),  vector4(893.985, -2275.837, 30.468, 72.070),
+            vector4(894.188, -2278.598, 30.468, 67.238),  vector4(896.048, -2282.575, 30.468, 39.264),
+            vector4(892.170, -2286.094, 30.468, 352.334), vector4(893.804, -2284.555, 30.468, 10.603),
+            vector4(894.432, -2288.290, 30.468, 1.191),   vector4(892.147, -2289.318, 30.468, 353.226),
+            vector4(893.299, -2292.591, 30.468, 353.592), vector4(891.166, -2293.612, 30.468, 343.993),
+            vector4(887.185, -2294.485, 30.468, 290.266), vector4(884.734, -2291.749, 30.468, 276.584),
+            vector4(880.892, -2293.349, 30.468, 272.596), vector4(878.148, -2295.895, 30.468, 312.062),
+            vector4(876.398, -2290.847, 30.468, 256.690), vector4(879.946, -2291.485, 30.468, 265.639),
+            vector4(874.683, -2296.097, 30.468, 300.001), vector4(877.389, -2295.764, 30.468, 323.910),
+            vector4(872.100, -2291.334, 30.468, 259.871), vector4(869.719, -2288.677, 30.468, 249.077),
+            vector4(868.316, -2288.768, 30.468, 245.280), vector4(869.559, -2293.151, 30.468, 282.122),
+            vector4(872.193, -2297.360, 30.468, 297.501), vector4(874.321, -2294.222, 30.468, 277.020),
+            vector4(895.646, -2287.415, 30.468, 13.802),  vector4(894.001, -2277.819, 30.468, 59.191),
+        },
+
+        interiorCoords = vector3(883.4142, -2282.372, 31.44168),
+
+        polyZone = {
+            vector2(907.62103271484, -2256.4008789062), vector2(884.54675292969, -2254.3540039062),
+            vector2(884.14483642578, -2258.1083984375), vector2(875.30352783203, -2257.1977539062),
+            vector2(875.5947265625,  -2253.6535644531), vector2(862.10314941406, -2252.4174804688),
+            vector2(858.14068603516, -2301.7275390625), vector2(864.97967529297, -2302.4465332031),
+            vector2(862.97448730469, -2326.4291992188), vector2(893.88073730469, -2329.2299804688),
+            vector2(898.49328613281, -2282.5910644531), vector2(905.71173095703, -2282.4621582031),
+            vector2(905.96569824219, -2275.7841796875), vector2(902.26873779297, -2275.3005371094),
+            vector2(902.99908447266, -2266.6032714844), vector2(906.78369140625, -2266.6918945312),
+        },
+        polyZoneOptions = { minZ = 25.34613609314, maxZ = 35.549388885498 },
 
         -- guard ped weapon pool (spawned inside the facility)
         weapons = {
@@ -289,76 +372,6 @@ RobberyConfig = {
                 { 10, { name = "ATTCH_SMG_SILENCER",     min = 1,  max = 1  } },
             },
         },
-
-        locations = {
-            extrDoor    = { coords = vector3(882.174, -2258.287, 30.541),  heading = 178.102 },
-            startDoor   = { coords = vector3(880.3293, -2264.466, 30.59444), heading = 178.102 },
-            securedDoor = { coords = vector3(882.976, -2268.013, 30.468) },
-            vaultDoor   = { coords = vector3(890.41, -2285.601, 30.467),   heading = 93.374 },
-        },
-
-        pedLocations = {
-            vector4(883.967, -2276.069, 30.468, 46.108),  vector4(887.204, -2275.289, 30.468, 78.713),
-            vector4(887.706, -2276.708, 30.468, 70.493),  vector4(890.998, -2276.155, 30.468, 76.662),
-            vector4(891.644, -2278.115, 30.468, 61.522),  vector4(893.985, -2275.837, 30.468, 72.070),
-            vector4(894.188, -2278.598, 30.468, 67.238),  vector4(896.048, -2282.575, 30.468, 39.264),
-            vector4(892.170, -2286.094, 30.468, 352.334), vector4(893.804, -2284.555, 30.468, 10.603),
-            vector4(894.432, -2288.290, 30.468, 1.191),   vector4(892.147, -2289.318, 30.468, 353.226),
-            vector4(893.299, -2292.591, 30.468, 353.592), vector4(891.166, -2293.612, 30.468, 343.993),
-            vector4(887.185, -2294.485, 30.468, 290.266), vector4(884.734, -2291.749, 30.468, 276.584),
-            vector4(880.892, -2293.349, 30.468, 272.596), vector4(878.148, -2295.895, 30.468, 312.062),
-            vector4(876.398, -2290.847, 30.468, 256.690), vector4(879.946, -2291.485, 30.468, 265.639),
-            vector4(874.683, -2296.097, 30.468, 300.001), vector4(877.389, -2295.764, 30.468, 323.910),
-            vector4(872.100, -2291.334, 30.468, 259.871), vector4(869.719, -2288.677, 30.468, 249.077),
-            vector4(868.316, -2288.768, 30.468, 245.280), vector4(869.559, -2293.151, 30.468, 282.122),
-            vector4(872.193, -2297.360, 30.468, 297.501), vector4(874.321, -2294.222, 30.468, 277.020),
-            vector4(895.646, -2287.415, 30.468, 13.802),  vector4(894.001, -2277.819, 30.468, 59.191),
-        },
-
-        -- loot interaction zones; data.type maps to a key in loot above
-        lootZones = {
-            { coords = vector3(881.8,  -2282.79, 30.47), width = 2.0,  length = 1.4, options = { heading = 333, minZ = 29.47, maxZ = 31.67 }, data = { id = 1, type = "guns-c2",   amount = 2, bonus = 8  } },
-            { coords = vector3(882.55, -2285.82, 30.47), width = 1.15, length = 1.8, options = { heading = 341, minZ = 29.47, maxZ = 31.27 }, data = { id = 2, type = "guns-c2",   amount = 2, bonus = 8  } },
-            { coords = vector3(886.63, -2286.84, 30.59), width = 1.4,  length = 2.0, options = { heading = 0,   minZ = 29.59, maxZ = 30.99 }, data = { id = 3, type = "guns",      amount = 3, bonus = 15 } },
-            { coords = vector3(887.01, -2282.06, 30.47), width = 1.2,  length = 2.2, options = { heading = 354, minZ = 29.47, maxZ = 31.27 }, data = { id = 4, type = "components", amount = 4, bonus = 10 } },
-        },
-
-        interiorCoords = vector3(883.4142, -2282.372, 31.44168),
-
-        polyZone = {
-            vector2(907.62103271484, -2256.4008789062), vector2(884.54675292969, -2254.3540039062),
-            vector2(884.14483642578, -2258.1083984375), vector2(875.30352783203, -2257.1977539062),
-            vector2(875.5947265625,  -2253.6535644531), vector2(862.10314941406, -2252.4174804688),
-            vector2(858.14068603516, -2301.7275390625), vector2(864.97967529297, -2302.4465332031),
-            vector2(862.97448730469, -2326.4291992188), vector2(893.88073730469, -2329.2299804688),
-            vector2(898.49328613281, -2282.5910644531), vector2(905.71173095703, -2282.4621582031),
-            vector2(905.96569824219, -2275.7841796875), vector2(902.26873779297, -2275.3005371094),
-            vector2(902.99908447266, -2266.6032714844), vector2(906.78369140625, -2266.6918945312),
-        },
-        polyZoneOptions = { minZ = 25.34613609314, maxZ = 35.549388885498 },
-
-        targets = {
-            secure = {
-                coords  = vector3(876.94, -2262.69, 30.47),
-                length  = 0.8, width = 1.4,
-                options = { heading = 356, minZ = 29.87, maxZ = 31.47 },
-            },
-            c4 = {
-                coords  = vector3(873.44, -2294.37, 30.47),
-                length  = 1.4, width = 1.4,
-                options = { heading = 355, minZ = 29.47, maxZ = 31.67 },
-            },
-            frontPCHack = {
-                coords  = vector3(875.15, -2263.83, 30.47),
-                length  = 0.8, width = 1.2,
-                options = { heading = 354, minZ = 28.92, maxZ = 31.32 },
-            },
-            securityHack = {
-                coords  = vector3(887.07, -2299.13, 30.47),
-                length  = 3.0, width = 1.0,
-                options = { heading = 264, minZ = 29.47, maxZ = 31.27 },
-            },
-        },
     },
 
     -- LOMBANK
@@ -367,14 +380,15 @@ RobberyConfig = {
         requiredPolice  = 4,
         resetTime       = 60 * 60 * 8,
 
-        carts = {
-            `prop_large_gold`,
-            `prop_large_gold_alt_a`,
-            `prop_large_gold_alt_b`,
-            `prop_large_gold_alt_c`,
+        -- STEP 1: disable power boxes to deactivate lasers (hack or thermite per box)
+        powerBoxes = {
+            { isThermite = false, coords = vector3(85.45, -812.77, 31.36), length = 1.0, width = 1.4, options = { heading = 343, minZ = 31.16, maxZ = 32.96 }, data = { boxId = 1, ptFxPoint = vector3(85.37447, -812.7527, 32.08653) } },
+            { isThermite = false, coords = vector3(55.65, -832.02, 31.07), length = 1.0, width = 1.4, options = { heading = 340, minZ = 30.47, maxZ = 33.27 }, data = { boxId = 2, ptFxPoint = vector3(55.73209, -831.9764, 32.08678) } },
+            { isThermite = true,  coords = vector3(88.81, -1080.09, 29.3), length = 1.6, width = 1.4, options = { heading = 336, minZ = 28.3,  maxZ = 30.5  }, data = { boxId = 3, thermitePoint = { coords = vector3(89.09108, -1080.605, 29.54803), heading = 71.914 }, ptFxPoint = vector3(89.09108, -1080.605, 29.54803) } },
         },
 
-        -- thermite interaction points; requiredDoors must all be open first
+        -- STEP 2: thermite doors in sequence to progress deeper into the bank
+        --   lobbyGate → vaultGate → (lowerVaultGate or upperVaultGate) → lowerVaultRooms
         thermitePoints = {
             lobbyGate = {
                 coords = vector3(17.5381, -920.9682, 30.07446), heading = 249.549,
@@ -416,6 +430,7 @@ RobberyConfig = {
             },
         },
 
+        -- STEP 3: hack vault doors with purple laptop (requires gates already thermited)
         hackPoints = {
             upperVaultDoor = {
                 coords = vector3(21.330, -939.860, 29.903), heading = 161.625,
@@ -431,23 +446,34 @@ RobberyConfig = {
             },
         },
 
-        powerBoxes = {
-            { isThermite = false, coords = vector3(85.45, -812.77, 31.36), length = 1.0, width = 1.4, options = { heading = 343, minZ = 31.16, maxZ = 32.96 }, data = { boxId = 1, ptFxPoint = vector3(85.37447, -812.7527, 32.08653) } },
-            { isThermite = false, coords = vector3(55.65, -832.02, 31.07), length = 1.0, width = 1.4, options = { heading = 340, minZ = 30.47, maxZ = 33.27 }, data = { boxId = 2, ptFxPoint = vector3(55.73209, -831.9764, 32.08678) } },
-            { isThermite = true,  coords = vector3(88.81, -1080.09, 29.3), length = 1.6, width = 1.4, options = { heading = 336, minZ = 28.3,  maxZ = 30.5  }, data = { boxId = 3, thermitePoint = { coords = vector3(89.09108, -1080.605, 29.54803), heading = 71.914 }, ptFxPoint = vector3(89.09108, -1080.605, 29.54803) } },
-        },
-
+        -- STEP 4: drill upper vault walls to open the upper vault
         upperVaultPoints = {
             { coords = vector3(24.18, -941.61, 29.9), length = 0.6, width = 2.2, options = { heading = 340, minZ = 29.3, maxZ = 31.7 }, wallId = 1 },
             { coords = vector3(26.84, -942.42, 29.9), length = 0.6, width = 2.2, options = { heading = 340, minZ = 29.3, maxZ = 31.7 }, wallId = 2 },
             { coords = vector3(27.5,  -944.83, 29.9), length = 0.6, width = 2.2, options = { heading = 251, minZ = 29.3, maxZ = 31.7 }, wallId = 3 },
         },
 
+        -- STEP 5: loot gold carts inside the lower vault rooms
         rooms = {
             { coords = vector3(22.14, -913.35, 25.74), length = 3.8, width = 4.4, options = { heading = 340, minZ = 24.74, maxZ = 27.54 }, roomId = 1 },
             { coords = vector3(35.55, -918.27, 25.74), length = 3.8, width = 4.4, options = { heading = 340, minZ = 24.74, maxZ = 27.54 }, roomId = 2 },
             { coords = vector3(24.7,  -906.27, 25.74), length = 3.8, width = 4.4, options = { heading = 340, minZ = 24.74, maxZ = 27.54 }, roomId = 3 },
             { coords = vector3(38.18, -911.16, 25.74), length = 3.8, width = 4.4, options = { heading = 340, minZ = 24.74, maxZ = 27.54 }, roomId = 4 },
+        },
+
+        -- gold cart prop hashes (used for spawning lootable carts in rooms)
+        carts = {
+            `prop_large_gold`,
+            `prop_large_gold_alt_a`,
+            `prop_large_gold_alt_b`,
+            `prop_large_gold_alt_c`,
+        },
+
+        deathBox = {
+            coords  = vector3(24.86, -921.78, 25.74),
+            length  = 7.4, width = 7.8,
+            options = { heading = 340, minZ = 24.74, maxZ = 28.74 },
+            data    = { isDeath = true, tpCoords = vector3(2.593, -935.504, 29.905), door = "pulsar_lombank_lasers" },
         },
 
         polyZones = {
@@ -482,13 +508,7 @@ RobberyConfig = {
             },
         },
 
-        deathBox = {
-            coords  = vector3(24.86, -921.78, 25.74),
-            length  = 7.4, width = 7.8,
-            options = { heading = 340, minZ = 24.74, maxZ = 28.74 },
-            data    = { isDeath = true, tpCoords = vector3(2.593, -935.504, 29.905), door = "pulsar_lombank_lasers" },
-        },
-
+        -- (police): secure the bank to end the heist
         secureZone = {
             coords  = vector3(7.69, -923.1, 29.9),
             length  = 2.8, width = 1.6,
@@ -502,12 +522,21 @@ RobberyConfig = {
         requiredPolice  = 0,
         resetTime       = 60 * 60 * 6,
 
+        -- STEP 1: disable power grid — hack (isThermite=false) or thermite (isThermite=true) each box
+        electric = {
+            { isThermite = false, coords = vector3(-1304.94, -803.99, 17.58), length = 0.8, width = 1.2, options = { heading = 303, minZ = 16.58, maxZ = 18.98 }, data = { boxId = 1, ptFxPoint = vector3(-1304.799, -803.7391, 17.62313) } },
+            { isThermite = false, coords = vector3(-1286.22, -834.59, 17.1),  length = 0.6, width = 1.0, options = { heading = 308, minZ = 16.5,  maxZ = 18.7  }, data = { boxId = 2, ptFxPoint = vector3(-1286.22,  -834.5959, 17.58015) } },
+            { isThermite = true,  coords = vector3(-1381.05, -830.55, 19.08), length = 0.6, width = 0.8, options = { heading = 14,  minZ = 17.08, maxZ = 20.08 }, data = { boxId = 3, thermitePoint = { coords = vector3(-1381.041, -830.7778, 19.095), heading = 18.270 }, ptFxPoint = vector3(-1381.041, -830.7778, 19.095) } },
+        },
+
+        -- STEP 2: thermite lobby/gate/vault doors in sequence (requiredDoors gates each placement)
         doors = {
             { coords = vector3(-1307.724, -817.6955, 16.80672), heading = 305.704, door = "pulsar_mazebank_tills",      requiredDoors = {} },
             { coords = vector3(-1301.999, -819.1389, 16.88831), heading = 306.572, door = "pulsar_mazebank_gate",       requiredDoors = { "pulsar_mazebank_tills" } },
             { coords = vector3(-1295.787, -816.8411, 17.15724), heading = 217.537, door = "pulsar_mazebank_vault_gate", requiredDoors = { "pulsar_mazebank_tills", "pulsar_mazebank_gate" } },
         },
 
+        -- STEP 3: hack vault door with red laptop (requires tills + gate open)
         hacks = {
             {
                 coords = vector3(-1299.680, -816.679, 16.779), heading = 308.857,
@@ -518,6 +547,21 @@ RobberyConfig = {
             },
         },
 
+        -- STEP 4: lockpick individual office doors (requires mazebank_offices unlocked first)
+        officeDoors = {
+            { coords = vector3(-1300.430, -831.591, 17.075), door = "pulsar_mazebank_office_1", requiredDoors = { "mazebank_offices" } },
+            { coords = vector3(-1297.972, -834.860, 17.075), door = "pulsar_mazebank_office_2", requiredDoors = { "mazebank_offices" } },
+            { coords = vector3(-1292.914, -841.591, 17.075), door = "pulsar_mazebank_office_3", requiredDoors = { "mazebank_offices" } },
+        },
+
+        -- STEP 5: hack office PCs to loot desks (each desk requires its office door)
+        desks = {
+            { coords = vector3(-1296.43, -827.92, 17.07), length = 1.2, width = 3.0, options = { heading = 306, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_1" }, data = { deskId = 1 } },
+            { coords = vector3(-1293.37, -832.03, 17.07), length = 1.2, width = 3.0, options = { heading = 307, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_2" }, data = { deskId = 2 } },
+            { coords = vector3(-1287.19, -837.78, 17.07), length = 1.2, width = 3.0, options = { heading = 307, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_3" }, data = { deskId = 3 } },
+        },
+
+        -- STEP 6: drill vault walls to breach the vault
         drillPoints = {
             { coords = vector3(-1293.04, -816.81, 16.78), length = 0.6, width = 2.0, options = { heading = 308, minZ = 16.58, maxZ = 18.18 }, data = { wallId = 1 } },
             { coords = vector3(-1291.2,  -818.81, 16.78), length = 0.8, width = 1.8, options = { heading = 305, minZ = 16.38, maxZ = 18.18 }, data = { wallId = 2 } },
@@ -525,24 +569,6 @@ RobberyConfig = {
             { coords = vector3(-1293.2,  -821.57, 16.78), length = 1.8, width = 0.8, options = { heading = 307, minZ = 16.58, maxZ = 17.78 }, data = { wallId = 4 } },
             { coords = vector3(-1294.69, -821.32, 16.78), length = 0.2, width = 1.6, options = { heading = 308, minZ = 16.58, maxZ = 17.98 }, data = { wallId = 5 } },
             { coords = vector3(-1296.16, -819.15, 16.78), length = 0.4, width = 1.8, options = { heading = 308, minZ = 16.58, maxZ = 17.98 }, data = { wallId = 6 } },
-        },
-
-        officeDoors = {
-            { coords = vector3(-1300.430, -831.591, 17.075), door = "pulsar_mazebank_office_1", requiredDoors = { "mazebank_offices" } },
-            { coords = vector3(-1297.972, -834.860, 17.075), door = "pulsar_mazebank_office_2", requiredDoors = { "mazebank_offices" } },
-            { coords = vector3(-1292.914, -841.591, 17.075), door = "pulsar_mazebank_office_3", requiredDoors = { "mazebank_offices" } },
-        },
-
-        desks = {
-            { coords = vector3(-1296.43, -827.92, 17.07), length = 1.2, width = 3.0, options = { heading = 306, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_1" }, data = { deskId = 1 } },
-            { coords = vector3(-1293.37, -832.03, 17.07), length = 1.2, width = 3.0, options = { heading = 307, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_2" }, data = { deskId = 2 } },
-            { coords = vector3(-1287.19, -837.78, 17.07), length = 1.2, width = 3.0, options = { heading = 307, minZ = 16.07, maxZ = 17.87 }, requiredDoors = { "pulsar_mazebank_offices", "pulsar_mazebank_office_3" }, data = { deskId = 3 } },
-        },
-
-        electric = {
-            { isThermite = false, coords = vector3(-1304.94, -803.99, 17.58), length = 0.8, width = 1.2, options = { heading = 303, minZ = 16.58, maxZ = 18.98 }, data = { boxId = 1, ptFxPoint = vector3(-1304.799, -803.7391, 17.62313) } },
-            { isThermite = false, coords = vector3(-1286.22, -834.59, 17.1),  length = 0.6, width = 1.0, options = { heading = 308, minZ = 16.5,  maxZ = 18.7  }, data = { boxId = 2, ptFxPoint = vector3(-1286.22,  -834.5959, 17.58015) } },
-            { isThermite = true,  coords = vector3(-1381.05, -830.55, 19.08), length = 0.6, width = 0.8, options = { heading = 14,  minZ = 17.08, maxZ = 20.08 }, data = { boxId = 3, thermitePoint = { coords = vector3(-1381.041, -830.7778, 19.095), heading = 18.270 }, ptFxPoint = vector3(-1381.041, -830.7778, 19.095) } },
         },
 
         polyZone = {
@@ -557,6 +583,7 @@ RobberyConfig = {
             options = {},
         },
 
+        -- (police): secure the bank to end the heist
         secureZone = {
             coords  = vector3(-1301.14, -826.27, 16.78),
             length  = 1.4, width = 0.6,
@@ -755,14 +782,7 @@ RobberyConfig = {
         serverStartWait = 1000 * 60 * math.random(60, 70), -- ms delay after server boot
         requiredPolice  = 4,                                -- minimum on-duty police
 
-        loot = {
-            { 8,  { name = "rolex",    min = 5,  max = 12 } },
-            { 20, { name = "watch",    min = 8,  max = 14 } },
-            { 30, { name = "chain",    min = 8,  max = 16 } },
-            { 25, { name = "ring",     min = 10, max = 20 } },
-            { 25, { name = "earrings", min = 10, max = 22 } },
-        },
-
+        -- STEP 1: smash jewelry cases with a melee weapon to collect loot
         cases = {
             { coords = vector3(-626.36, -239.02, 38.06), length = 0.6, width = 1.2, options = { heading = 36,  minZ = 37.46, maxZ = 38.66 } },
             { coords = vector3(-625.29, -238.26, 38.06), length = 0.6, width = 1.2, options = { heading = 36,  minZ = 37.46, maxZ = 38.66 } },
@@ -782,6 +802,15 @@ RobberyConfig = {
             { coords = vector3(-617.12, -230.19, 38.06), length = 0.6, width = 1.2, options = { heading = 306, minZ = 37.46, maxZ = 38.66 } },
             { coords = vector3(-617.89, -229.12, 38.06), length = 0.6, width = 1.2, options = { heading = 306, minZ = 37.46, maxZ = 38.66 } },
             { coords = vector3(-619.26, -227.27, 38.06), length = 0.6, width = 1.2, options = { heading = 306, minZ = 37.46, maxZ = 38.66 } },
+        },
+
+        -- (police): secure the store to reset it; loot drawn per case smashed
+        loot = {
+            { 8,  { name = "rolex",    min = 5,  max = 12 } },
+            { 20, { name = "watch",    min = 8,  max = 14 } },
+            { 30, { name = "chain",    min = 8,  max = 16 } },
+            { 25, { name = "ring",     min = 10, max = 20 } },
+            { 25, { name = "earrings", min = 10, max = 22 } },
         },
     },
 
